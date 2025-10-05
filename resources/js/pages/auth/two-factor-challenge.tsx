@@ -6,11 +6,12 @@ import {
     InputOTPGroup,
     InputOTPSlot,
 } from '@/components/ui/input-otp';
+import { Label } from '@/components/ui/label';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
-import AuthLayout from '@/layouts/auth-layout';
 import { store } from '@/routes/two-factor/login';
 import { Form, Head } from '@inertiajs/react';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { LoaderCircle, Shield } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export default function TwoFactorChallenge() {
@@ -46,86 +47,138 @@ export default function TwoFactorChallenge() {
     };
 
     return (
-        <AuthLayout
-            title={authConfigContent.title}
-            description={authConfigContent.description}
-        >
+        <>
             <Head title="Two-Factor Authentication" />
+            
+            <div className="min-h-screen flex items-center justify-center bg-white p-4">
+                <div className="w-full max-w-md">
+                    {/* Header */}
+                    <img src='/assets/images/hb_logo.png' alt='logo' className="mx-auto mb-6 w-24"/>
+                    <div className="text-center mb-8">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                            <Shield className="h-6 w-6 text-gray-900" />
+                        </div>
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                            {authConfigContent.title}
+                        </h1>
+                        <p className="mt-2 text-sm text-gray-600">
+                            {authConfigContent.description}
+                        </p>
+                    </div>
 
-            <div className="space-y-6">
-                <Form
-                    {...store.form()}
-                    className="space-y-4"
-                    resetOnError
-                    resetOnSuccess={!showRecoveryInput}
-                >
-                    {({ errors, processing, clearErrors }) => (
-                        <>
-                            {showRecoveryInput ? (
+                    {/* Two-Factor Card */}
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+                        <Form
+                            {...store.form()}
+                            className="flex flex-col gap-6"
+                            resetOnError
+                            resetOnSuccess={!showRecoveryInput}
+                        >
+                            {({ errors, processing, clearErrors }) => (
                                 <>
-                                    <Input
-                                        name="recovery_code"
-                                        type="text"
-                                        placeholder="Enter recovery code"
-                                        autoFocus={showRecoveryInput}
-                                        required
-                                    />
-                                    <InputError
-                                        message={errors.recovery_code}
-                                    />
-                                </>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center space-y-3 text-center">
-                                    <div className="flex w-full items-center justify-center">
-                                        <InputOTP
-                                            name="code"
-                                            maxLength={OTP_MAX_LENGTH}
-                                            value={code}
-                                            onChange={(value) => setCode(value)}
+                                    <div className="grid gap-5">
+                                        {showRecoveryInput ? (
+                                            <div className="grid gap-2">
+                                                <Label 
+                                                    htmlFor="recovery_code"
+                                                    className="text-sm font-medium text-gray-900"
+                                                >
+                                                    Recovery Code
+                                                </Label>
+                                                <Input
+                                                    id="recovery_code"
+                                                    name="recovery_code"
+                                                    type="text"
+                                                    placeholder="Enter recovery code"
+                                                    autoFocus={showRecoveryInput}
+                                                    required
+                                                    className="transition-all focus:ring-2 text-black"
+                                                />
+                                                <InputError message={errors.recovery_code} />
+                                            </div>
+                                        ) : (
+                                            <div className="grid gap-2">
+                                                <Label className="text-sm font-medium text-gray-900 text-center">
+                                                    Enter 6-Digit Code
+                                                </Label>
+                                                <div className="flex flex-col items-center justify-center space-y-3">
+                                                    <div className="flex w-full items-center justify-center">
+                                                        <InputOTP
+                                                            name="code"
+                                                            maxLength={OTP_MAX_LENGTH}
+                                                            value={code}
+                                                            onChange={(value) => setCode(value)}
+                                                            disabled={processing}
+                                                            pattern={REGEXP_ONLY_DIGITS}
+                                                        >
+                                                            <InputOTPGroup>
+                                                                {Array.from(
+                                                                    { length: OTP_MAX_LENGTH },
+                                                                    (_, index) => (
+                                                                        <InputOTPSlot
+                                                                            key={index}
+                                                                            index={index}
+                                                                        />
+                                                                    ),
+                                                                )}
+                                                            </InputOTPGroup>
+                                                        </InputOTP>
+                                                    </div>
+                                                    <InputError message={errors.code} />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Submit Button */}
+                                        <Button
+                                            type="submit"
+                                            className="w-full transition-all hover:shadow-md mt-2"
                                             disabled={processing}
-                                            pattern={REGEXP_ONLY_DIGITS}
                                         >
-                                            <InputOTPGroup>
-                                                {Array.from(
-                                                    { length: OTP_MAX_LENGTH },
-                                                    (_, index) => (
-                                                        <InputOTPSlot
-                                                            key={index}
-                                                            index={index}
-                                                        />
-                                                    ),
-                                                )}
-                                            </InputOTPGroup>
-                                        </InputOTP>
+                                            {processing ? (
+                                                <>
+                                                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                                    Verifying...
+                                                </>
+                                            ) : (
+                                                'Continue'
+                                            )}
+                                        </Button>
                                     </div>
-                                    <InputError message={errors.code} />
-                                </div>
+
+                                    {/* Divider */}
+                                    <div className="relative">
+                                        <div className="absolute inset-0 flex items-center">
+                                            <span className="w-full border-t border-gray-200" />
+                                        </div>
+                                        <div className="relative flex justify-center text-xs uppercase">
+                                            <span className="bg-white px-2 text-gray-500">
+                                                Alternative method
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Toggle Link */}
+                                    <div className="text-center">
+                                        <button
+                                            type="button"
+                                            className="text-sm font-medium hover:underline text-black transition-colors"
+                                            onClick={() => toggleRecoveryMode(clearErrors)}
+                                        >
+                                            {authConfigContent.toggleText}
+                                        </button>
+                                    </div>
+                                </>
                             )}
+                        </Form>
+                    </div>
 
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                disabled={processing}
-                            >
-                                Continue
-                            </Button>
-
-                            <div className="text-center text-sm text-muted-foreground">
-                                <span>or you can </span>
-                                <button
-                                    type="button"
-                                    className="cursor-pointer text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                    onClick={() =>
-                                        toggleRecoveryMode(clearErrors)
-                                    }
-                                >
-                                    {authConfigContent.toggleText}
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                    {/* Footer */}
+                    <p className="mt-8 text-center text-xs text-gray-500">
+                        By continuing, you agree to our Terms of Service and Privacy Policy
+                    </p>
+                </div>
             </div>
-        </AuthLayout>
+        </>
     );
 }
