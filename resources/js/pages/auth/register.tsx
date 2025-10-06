@@ -1,7 +1,7 @@
 import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import { login } from '@/routes';
 import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -17,166 +17,313 @@ export default function Register() {
     return (
         <>
             <Head title="Register" />
-            
-            <div className="min-h-screen flex items-center justify-center bg-white p-4">
-                <div className="w-full max-w-md">
+            <div className="flex min-h-screen items-center justify-center bg-white p-4">
+                <div className="w-full max-w-3xl">
+                    {/* Logo */}
+                    <img
+                        src="/assets/images/hb_logo.png"
+                        alt="Logo"
+                        className="mx-auto mb-6 w-24"
+                    />
+
                     {/* Header */}
-                    <img src='/assets/images/hb_logo.png' alt='logo' className="mx-auto mb-6 w-24"/>
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                    <div className="mb-8 text-center">
+                        <h1 className="text-3xl font-bold text-gray-900">
                             Create an account
                         </h1>
                         <p className="mt-2 text-sm text-gray-600">
-                            Enter your details below to get started
+                            Enter your details to get started
                         </p>
                     </div>
 
-                    {/* Registration Card */}
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8">
+                    {/* Registration Form */}
+                    <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
                         <Form
                             {...RegisteredUserController.store.form()}
-                            resetOnSuccess={['password', 'password_confirmation']}
+                            resetOnSuccess={[
+                                'password',
+                                'password_confirmation',
+                            ]}
                             disableWhileProcessing
                             className="flex flex-col gap-6"
                         >
                             {({ processing, errors }) => (
                                 <>
-                                    <div className="grid gap-5">
-                                        {/* Name Field */}
-                                        <div className="grid gap-2">
-                                            <Label 
+                                    {/* 2-column grid for large screens */}
+                                    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                                        {/* Name */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
                                                 htmlFor="name"
-                                                className="text-sm font-medium text-gray-900"
                                             >
-                                                Full name
+                                                Full Name
                                             </Label>
                                             <Input
+                                                className="text-black"
                                                 id="name"
+                                                name="name"
                                                 type="text"
                                                 required
-                                                autoFocus
-                                                tabIndex={1}
-                                                autoComplete="name"
-                                                name="name"
                                                 placeholder="John Doe"
-                                                className="transition-all text-black focus:ring-2"
                                             />
                                             <InputError message={errors.name} />
                                         </div>
 
-                                        {/* Email Field */}
-                                        <div className="grid gap-2">
-                                            <Label 
+                                        {/* Email */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
                                                 htmlFor="email"
-                                                className="text-sm font-medium text-gray-900"
                                             >
-                                                Email address
+                                                Email Address
                                             </Label>
                                             <Input
+                                                className="text-black"
                                                 id="email"
+                                                name="email"
                                                 type="email"
                                                 required
-                                                tabIndex={2}
-                                                autoComplete="email"
-                                                name="email"
                                                 placeholder="email@example.com"
-                                                className="transition-all text-black focus:ring-2"
                                             />
-                                            <InputError message={errors.email} />
+                                            <InputError
+                                                message={errors.email}
+                                            />
                                         </div>
 
-                                        {/* Password Field */}
-                                        <div className="grid gap-2">
-                                            <Label 
+                                        {/* Phone Number */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
+                                                htmlFor="phone_number"
+                                            >
+                                                Phone Number
+                                            </Label>
+                                            <Input
+                                                className="text-black"
+                                                id="phone_number"
+                                                name="phone_number"
+                                                type="text"
+                                                required
+                                                placeholder="+234 801 234 5678"
+                                            />
+                                            <InputError
+                                                message={errors.phone_number}
+                                            />
+                                        </div>
+
+                                        {/* Date of Birth */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
+                                                htmlFor="date_of_birth"
+                                            >
+                                                Date of Birth
+                                            </Label>
+                                            <Input
+                                                className="text-black"
+                                                id="date_of_birth"
+                                                name="date_of_birth"
+                                                type="date"
+                                            />
+                                            <InputError
+                                                message={errors.date_of_birth}
+                                            />
+                                        </div>
+
+                                        {/* Gender */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
+                                                htmlFor="gender"
+                                            >
+                                                Gender
+                                            </Label>
+                                            <select
+                                                id="gender"
+                                                name="gender"
+                                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-black focus:ring-2"
+                                            >
+                                                <option value="">
+                                                    Select gender
+                                                </option>
+                                                <option value="male">
+                                                    Male
+                                                </option>
+                                                <option value="female">
+                                                    Female
+                                                </option>
+                                                <option value="other">
+                                                    Other
+                                                </option>
+                                            </select>
+                                            <InputError
+                                                message={errors.gender}
+                                            />
+                                        </div>
+
+                                        {/* Country */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
+                                                htmlFor="country"
+                                            >
+                                                Country
+                                            </Label>
+                                            <Input
+                                                className="text-black"
+                                                id="country"
+                                                name="country"
+                                                type="text"
+                                                placeholder="Nigeria"
+                                            />
+                                            <InputError
+                                                message={errors.country}
+                                            />
+                                        </div>
+
+                                        {/* Bio */}
+                                        <div className="lg:col-span-2">
+                                            <Label
+                                                className="text-black"
+                                                htmlFor="bio"
+                                            >
+                                                Short Bio
+                                            </Label>
+                                            <textarea
+                                                id="bio"
+                                                name="bio"
+                                                placeholder="Tell us a bit about yourself"
+                                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-black focus:ring-2"
+                                                rows={3}
+                                            />
+                                            <InputError message={errors.bio} />
+                                        </div>
+
+                                        {/* Profile Picture */}
+                                        <div className="lg:col-span-2">
+                                            <Label
+                                                className="text-black"
+                                                htmlFor="profile_picture"
+                                            >
+                                                Profile Picture
+                                            </Label>
+                                            <Input
+                                                className="text-black"
+                                                id="profile_picture"
+                                                name="profile_picture"
+                                                type="file"
+                                                accept="image/*"
+                                            />
+                                            <InputError
+                                                message={errors.profile_picture}
+                                            />
+                                        </div>
+
+                                        {/* Password */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
                                                 htmlFor="password"
-                                                className="text-sm font-medium text-gray-900"
                                             >
                                                 Password
                                             </Label>
                                             <div className="relative">
                                                 <Input
+                                                    className="text-black pr-10"
                                                     id="password"
-                                                    type={showPassword ? 'text' : 'password'}
-                                                    required
-                                                    tabIndex={3}
-                                                    autoComplete="new-password"
                                                     name="password"
+                                                    type={
+                                                        showPassword
+                                                            ? 'text'
+                                                            : 'password'
+                                                    }
+                                                    required
                                                     placeholder="••••••••"
-                                                    className="pr-10 transition-all text-black focus:ring-2"
                                                 />
                                                 <button
                                                     type="button"
-                                                    onClick={() => setShowPassword(!showPassword)}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-sm transition-colors"
-                                                    tabIndex={-1}
-                                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                                    onClick={() =>
+                                                        setShowPassword(
+                                                            !showPassword,
+                                                        )
+                                                    }
+                                                    className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500"
                                                 >
                                                     {showPassword ? (
-                                                        <EyeOff className="h-4 w-4" />
+                                                        <EyeOff size={16} />
                                                     ) : (
-                                                        <Eye className="h-4 w-4" />
+                                                        <Eye size={16} />
                                                     )}
                                                 </button>
                                             </div>
-                                            <InputError message={errors.password} />
+                                            <InputError
+                                                message={errors.password}
+                                            />
                                         </div>
 
-                                        {/* Confirm Password Field */}
-                                        <div className="grid gap-2">
-                                            <Label 
+                                        {/* Confirm Password */}
+                                        <div>
+                                            <Label
+                                                className="text-black"
                                                 htmlFor="password_confirmation"
-                                                className="text-sm font-medium text-gray-900"
                                             >
-                                                Confirm password
+                                                Confirm Password
                                             </Label>
                                             <div className="relative">
                                                 <Input
                                                     id="password_confirmation"
-                                                    type={showConfirmPassword ? 'text' : 'password'}
-                                                    required
-                                                    tabIndex={4}
-                                                    autoComplete="new-password"
                                                     name="password_confirmation"
+                                                    type={
+                                                        showConfirmPassword
+                                                            ? 'text'
+                                                            : 'password'
+                                                    }
+                                                    required
                                                     placeholder="••••••••"
-                                                    className="pr-10 transition-all text-black focus:ring-2"
+                                                    className="pr-10 text-black"
                                                 />
                                                 <button
                                                     type="button"
-                                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-sm transition-colors"
-                                                    tabIndex={-1}
-                                                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                                                    onClick={() =>
+                                                        setShowConfirmPassword(
+                                                            !showConfirmPassword,
+                                                        )
+                                                    }
+                                                    className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500"
                                                 >
                                                     {showConfirmPassword ? (
-                                                        <EyeOff className="h-4 w-4" />
+                                                        <EyeOff size={16} />
                                                     ) : (
-                                                        <Eye className="h-4 w-4" />
+                                                        <Eye size={16} />
                                                     )}
                                                 </button>
                                             </div>
-                                            <InputError message={errors.password_confirmation} />
+                                            <InputError
+                                                message={
+                                                    errors.password_confirmation
+                                                }
+                                            />
                                         </div>
-
-                                        {/* Submit Button */}
-                                        <Button
-                                            type="submit"
-                                            className="w-full transition-all hover:shadow-md mt-2"
-                                            tabIndex={5}
-                                            data-test="register-user-button"
-                                        >
-                                            {processing ? (
-                                                <>
-                                                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                                                    Creating account...
-                                                </>
-                                            ) : (
-                                                'Create account'
-                                            )}
-                                        </Button>
                                     </div>
 
+                                    {/* Submit */}
+                                    <Button
+                                        type="submit"
+                                        className="mt-3 w-full"
+                                    >
+                                        {processing ? (
+                                            <>
+                                                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                                Creating account...
+                                            </>
+                                        ) : (
+                                            'Create account'
+                                        )}
+                                    </Button>
+
                                     {/* Divider */}
-                                    <div className="relative">
+                                    <div className="relative my-4">
                                         <div className="absolute inset-0 flex items-center">
                                             <span className="w-full border-t border-gray-200" />
                                         </div>
@@ -189,10 +336,9 @@ export default function Register() {
 
                                     {/* Login Link */}
                                     <div className="text-center">
-                                        <TextLink 
-                                            href={login()} 
-                                            tabIndex={6}
-                                            className="text-sm font-medium hover:underline text-black"
+                                        <TextLink
+                                            href={login()}
+                                            className="text-sm font-medium text-black hover:underline"
                                         >
                                             Log in instead
                                         </TextLink>
@@ -204,7 +350,8 @@ export default function Register() {
 
                     {/* Footer */}
                     <p className="mt-8 text-center text-xs text-gray-500">
-                        By creating an account, you agree to our Terms of Service and Privacy Policy
+                        By creating an account, you agree to our Terms of
+                        Service and Privacy Policy
                     </p>
                 </div>
             </div>
