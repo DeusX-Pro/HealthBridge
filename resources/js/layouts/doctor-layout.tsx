@@ -11,7 +11,6 @@ import { type BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import {
     Bell,
-    BookOpen,
     Calendar,
     CalendarCheck,
     ChevronDown,
@@ -27,7 +26,6 @@ import {
     Pill,
     Settings,
     User,
-    UserPlus,
     Users,
     Video,
     Wallet,
