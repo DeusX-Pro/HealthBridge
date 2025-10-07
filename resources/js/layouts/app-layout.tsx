@@ -5,7 +5,7 @@ import {
     Home, LayoutDashboard, Users, FileText, BarChart3, Package,
     TrendingUp, Calendar, Zap
 } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -22,6 +22,16 @@ interface AppLayoutProps {
     breadcrumbs?: BreadcrumbItem[];
 }
 
+interface PageProps {
+    auth: {
+        user: {
+            name: string;
+            email: string;
+        };
+    };
+    [key: string]: any; // Add index signature to satisfy the constraint
+}
+
 const navigationItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Analytics', href: '/analytics', icon: TrendingUp },
@@ -34,10 +44,15 @@ const navigationItems = [
 
 export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const currentPath = '/dashboard'; // This should come from your router
+    const { auth } = usePage<PageProps>().props;
+    const currentPath = window.location.pathname;
+
+    const handleLogout = () => {
+        router.post('/logout'); // Replace '/logout' with the correct logout route if different
+    };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-gray-50">
+        <div className="min-h-screen bg-white">
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
                 <div
@@ -107,8 +122,8 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                 <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-green-500 border-2 border-white" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-gray-900 truncate">John Doe</p>
-                                <p className="text-xs text-gray-500 truncate">john@example.com</p>
+                                <p className="text-sm font-semibold text-gray-900 truncate">{auth.user.name}</p>
+                                <p className="text-xs text-gray-500 truncate">{auth.user.email}</p>
                             </div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -126,7 +141,10 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                         <span>Settings</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="text-red-600">
+                                    <DropdownMenuItem 
+                                        className="text-red-600 cursor-pointer"
+                                        onClick={handleLogout}
+                                    >
                                         <LogOut className="mr-2 h-4 w-4" />
                                         <span>Log out</span>
                                     </DropdownMenuItem>
@@ -179,7 +197,7 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                         {/* Right side */}
                         <div className="flex items-center gap-3">
                             {/* Search */}
-                            <div className="hidden md:block">
+                            {/* <div className="hidden md:block">
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                                     <Input
@@ -188,7 +206,7 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                         className="pl-10 w-72 border-gray-200 focus:border-green-500 focus:ring-green-500/20"
                                     />
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Notifications */}
                             <Button 
@@ -196,7 +214,7 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                 size="icon" 
                                 className="relative hover:bg-green-50 hover:text-green-600 transition-colors"
                             >
-                                <Bell className="h-5 w-5" />
+                                <Bell className="h-5 w-5 text-black" />
                                 <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-white" />
                             </Button>
 
@@ -211,7 +229,12 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56">
-                                    <DropdownMenuLabel className="font-semibold">My Account</DropdownMenuLabel>
+                                    <DropdownMenuLabel className="font-semibold">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm">{auth.user.name}</p>
+                                            <p className="text-xs font-normal text-gray-500">{auth.user.email}</p>
+                                        </div>
+                                    </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem className="cursor-pointer">
                                         <User className="mr-2 h-4 w-4 text-green-600" />
@@ -222,7 +245,10 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                         <span>Settings</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="text-red-600 cursor-pointer">
+                                    <DropdownMenuItem 
+                                        className="text-red-600 cursor-pointer"
+                                        onClick={handleLogout}
+                                    >
                                         <LogOut className="mr-2 h-4 w-4" />
                                         <span>Log out</span>
                                     </DropdownMenuItem>

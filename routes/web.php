@@ -14,8 +14,45 @@ Route::middleware(['auth', RoleMiddleware::class])->group(function () {
     })->name('dashboard');
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
-require __DIR__.'/admin/index.php';
-require __DIR__.'/doctor/index.php';
-require __DIR__.'/patient/index.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
+
+// Admin Route Starts 
+require __DIR__ . '/admin/index.php';
+// Admin Route Ends
+
+// Doctor Route Starts
+require __DIR__ . '/doctor/index.php';
+require __DIR__ . '/doctor/appointment.php';
+require __DIR__ . '/doctor/availability.php';
+require __DIR__ . '/doctor/consultation.php';
+require __DIR__ . '/doctor/earning.php';
+require __DIR__ . '/doctor/lab-result.php';
+require __DIR__ . '/doctor/medical-record.php';
+require __DIR__ . '/doctor/messages.php';
+require __DIR__ . '/doctor/patients.php';
+require __DIR__ . '/doctor/prescription.php';
+require __DIR__ . '/doctor/profile.php';
+require __DIR__ . '/doctor/schedule.php';
+require __DIR__ . '/doctor/settings.php';
+require __DIR__ . '/doctor/telemedicine.php';
+// Doctor Route Ends
+
+// Patient Route Starts
+require __DIR__ . '/patient/index.php';
+require __DIR__ . '/patient/ai-doctor.php';
+require __DIR__ . '/patient/appointment.php';
+require __DIR__ . '/patient/doctor.php';
+require __DIR__ . '/patient/emergency.php';
+require __DIR__ . '/patient/health-record.php';
+require __DIR__ . '/patient/health-tip.php';
+require __DIR__ . '/patient/lab-result.php';
+require __DIR__ . '/patient/messages.php';
+require __DIR__ . '/patient/pharmacy.php';
+require __DIR__ . '/patient/prescription.php';
+require __DIR__ . '/patient/profile.php';
+require __DIR__ . '/patient/settings.php';
+require __DIR__ . '/patient/telemedicine.php';
+require __DIR__ . '/patient/vitals-tracking.php';
+require __DIR__ . '/patient/wallet.php';
+// Patient Route Ends
