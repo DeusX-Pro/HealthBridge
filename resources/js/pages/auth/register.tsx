@@ -18,7 +18,7 @@ export default function Register() {
         <>
             <Head title="Register" />
             <div className="flex min-h-screen items-center justify-center bg-white p-4">
-                <div className="w-full max-w-3xl">
+                <div className="w-full max-w-4xl">
                     {/* Logo */}
                     <img
                         src="/assets/images/hb_logo.png"
@@ -118,7 +118,7 @@ export default function Register() {
                                                 className="text-black"
                                                 htmlFor="date_of_birth"
                                             >
-                                                Date of Birth
+                                                Date of Birth (DD/MM/YYYY)
                                             </Label>
                                             <Input
                                                 className="text-black"

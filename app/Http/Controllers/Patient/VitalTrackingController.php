@@ -2,10 +2,22 @@
 
 namespace App\Http\Controllers\Patient;
 
-use App\Http\Controllers\Controller;
+use Inertia\Response;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class VitalTrackingController extends Controller
 {
     //
+        public function index(): Response
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->load('patient');
+        return inertia(
+            'dashboard/patient/vital_tracking/index', [
+            'user' => $user,
+        ]);
+    }
 }

@@ -56,7 +56,7 @@ export default function Dashboard() {
     const { auth } = usePage<PageProps>().props;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Patient Dashboard" />
 
             <div className="flex flex-col gap-6">
                 {/* Welcome Section */}

@@ -30,7 +30,6 @@ import {
     Video,
     Wallet,
     X,
-    Zap,
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 
@@ -55,13 +54,17 @@ const navigationItems = [
     { name: 'Appointments', href: '/doctor/appointments', icon: Calendar },
     { name: 'Consultations', href: '/doctor/consultations', icon: Video },
     { name: 'Prescriptions', href: '/doctor/prescriptions', icon: Pill },
-    { name: 'Medical Records', href: '/doctor/medical-records', icon: FileText },
+    {
+        name: 'Medical Records',
+        href: '/doctor/medical-records',
+        icon: FileText,
+    },
     { name: 'Lab Results', href: '/doctor/lab-result', icon: ClipboardList },
     { name: 'Schedule', href: '/doctor/schedule', icon: Clock },
     { name: 'Telemedicine', href: '/doctor/telemedicine', icon: Monitor },
     { name: 'Messages', href: '/doctor/messages', icon: MessageSquare },
     { name: 'Availability', href: '/doctor/availability', icon: CalendarCheck },
-    { name: 'Earnings', href: '/doctor/earnings', icon: Wallet },
+    { name: 'Wallet', href: '/doctor/wallet', icon: Wallet },
     { name: 'Profile', href: '/doctor/profile', icon: User },
     { name: 'Settings', href: '/doctor/settings', icon: Settings },
 ];
@@ -96,14 +99,18 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                     <div className="flex h-20 items-center justify-between border-b border-gray-100 bg-gradient-to-r from-blue-600 to-blue-700 px-6">
                         <div className="flex items-center gap-3">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                                <Zap className="h-6 w-6 text-white" />
+                                <img
+                                    src="/assets/images/hb_logo.png"
+                                    alt="logo"
+                                    className="mx-auto w-24"
+                                />
                             </div>
                             <div>
                                 <h1 className="text-lg font-bold text-white">
-                                    Your Brand
+                                    Health Bridge
                                 </h1>
-                                <p className="text-xs text-blue-100">
-                                    Dashboard
+                                <p className="text-xs text-green-100">
+                                    Doctor Dashboard
                                 </p>
                             </div>
                         </div>

@@ -5,12 +5,21 @@ namespace App\Http\Controllers\Patient;
 use Inertia\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
     //
     public function index(): Response
     {
-        return inertia('dashboard/patient/index');
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->load('patient');
+        return inertia(
+            'dashboard/patient/dashboard/index',
+            [
+                'user' => $user,
+            ]
+        );
     }
 }

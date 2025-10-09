@@ -32,7 +32,6 @@ import {
     Video,
     Wallet,
     X,
-    Zap,
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 
@@ -58,7 +57,7 @@ const navigationItems = [
     { name: 'Doctors', href: '/patient/doctors', icon: Stethoscope },
     { name: 'Prescriptions', href: '/patient/prescriptions', icon: Pill },
     { name: 'Lab Results', href: '/patient/lab-results', icon: FileText },
-    { name: 'Health Records', href: '/patient/health-records', icon: ClipboardList },
+    {name: 'Health Records', href: '/patient/health-records', icon: ClipboardList },
     { name: 'Vitals Tracking', href: '/patient/vitals-tracking', icon: Activity },
     { name: 'Telemedicine', href: '/patient/telemedicine', icon: Video },
     { name: 'Pharmacies', href: '/patient/pharmacies', icon: Store },
@@ -100,14 +99,18 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                     <div className="flex h-20 items-center justify-between border-b border-gray-100 bg-gradient-to-r from-green-600 to-green-700 px-6">
                         <div className="flex items-center gap-3">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                                <Zap className="h-6 w-6 text-white" />
+                                <img
+                                    src="/assets/images/hb_logo.png"
+                                    alt="logo"
+                                    className="mx-auto w-24"
+                                />
                             </div>
                             <div>
                                 <h1 className="text-lg font-bold text-white">
-                                    Your Brand
+                                    Health Bridge
                                 </h1>
                                 <p className="text-xs text-green-100">
-                                    Dashboard
+                                    Patient Dashboard
                                 </p>
                             </div>
                         </div>

@@ -26,7 +26,6 @@ require __DIR__ . '/doctor/index.php';
 require __DIR__ . '/doctor/appointment.php';
 require __DIR__ . '/doctor/availability.php';
 require __DIR__ . '/doctor/consultation.php';
-require __DIR__ . '/doctor/earning.php';
 require __DIR__ . '/doctor/lab-result.php';
 require __DIR__ . '/doctor/medical-record.php';
 require __DIR__ . '/doctor/messages.php';
@@ -36,6 +35,7 @@ require __DIR__ . '/doctor/profile.php';
 require __DIR__ . '/doctor/schedule.php';
 require __DIR__ . '/doctor/settings.php';
 require __DIR__ . '/doctor/telemedicine.php';
+require __DIR__ . '/doctor/wallet.php';
 // Doctor Route Ends
 
 // Patient Route Starts
