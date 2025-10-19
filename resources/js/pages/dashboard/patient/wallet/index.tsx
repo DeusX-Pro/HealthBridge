@@ -1,30 +1,27 @@
-import AppLayout from '@/layouts/patient-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useState } from 'react';
+import AppLayout from '@/layouts/patient-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 import {
-    Wallet,
-    Plus,
-    ArrowUpRight,
     ArrowDownLeft,
-    CreditCard,
-    DollarSign,
-    TrendingUp,
-    Gift,
-    Download,
-    Filter,
-    Search,
+    ArrowUpRight,
     Calendar,
     CheckCircle2,
     Clock,
-    XCircle,
-    Zap,
-    Shield,
+    CreditCard,
+    Download,
     Eye,
     EyeOff,
+    Gift,
+    Plus,
+    Shield,
+    TrendingUp,
+    Wallet,
+    XCircle,
+    Zap,
 } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -50,9 +47,11 @@ interface PageProps {
 export default function WalletPage() {
     const { auth } = usePage<PageProps>().props;
     const [showBalance, setShowBalance] = useState(true);
-    const [activeTab, setActiveTab] = useState<'all' | 'income' | 'expense'>('all');
+    const [activeTab, setActiveTab] = useState<'all' | 'income' | 'expense'>(
+        'all',
+    );
 
-    const walletBalance = 1250.50;
+    const walletBalance = 1250.5;
     const availableVouchers = 3;
     const freeConsultations = 2;
 
@@ -62,7 +61,7 @@ export default function WalletPage() {
             type: 'expense',
             title: 'Video Consultation',
             description: 'Dr. Sarah Johnson - Cardiology',
-            amount: 50.00,
+            amount: 50.0,
             date: '2024-12-10',
             time: '2:30 PM',
             status: 'completed',
@@ -73,7 +72,7 @@ export default function WalletPage() {
             type: 'income',
             title: 'Wallet Top-up',
             description: 'Added via Credit Card',
-            amount: 200.00,
+            amount: 200.0,
             date: '2024-12-09',
             time: '10:15 AM',
             status: 'completed',
@@ -84,7 +83,7 @@ export default function WalletPage() {
             type: 'expense',
             title: 'Prescription Purchase',
             description: 'HealthPlus Pharmacy',
-            amount: 35.50,
+            amount: 35.5,
             date: '2024-12-08',
             time: '4:45 PM',
             status: 'completed',
@@ -95,7 +94,7 @@ export default function WalletPage() {
             type: 'expense',
             title: 'Lab Tests',
             description: 'Complete Blood Count - Central Lab',
-            amount: 85.00,
+            amount: 85.0,
             date: '2024-12-07',
             time: '9:00 AM',
             status: 'completed',
@@ -106,7 +105,7 @@ export default function WalletPage() {
             type: 'income',
             title: 'Refund',
             description: 'Cancelled Appointment',
-            amount: 50.00,
+            amount: 50.0,
             date: '2024-12-06',
             time: '11:20 AM',
             status: 'completed',
@@ -117,7 +116,7 @@ export default function WalletPage() {
             type: 'expense',
             title: 'Telemedicine Session',
             description: 'Dr. Michael Chen - General Medicine',
-            amount: 40.00,
+            amount: 40.0,
             date: '2024-12-05',
             time: '3:00 PM',
             status: 'pending',
@@ -140,28 +139,40 @@ export default function WalletPage() {
         },
     ];
 
-    const filteredTransactions = transactions.filter(tx => {
+    const filteredTransactions = transactions.filter((tx) => {
         if (activeTab === 'income') return tx.type === 'income';
         if (activeTab === 'expense') return tx.type === 'expense';
         return true;
     });
 
     const totalIncome = transactions
-        .filter(tx => tx.type === 'income')
+        .filter((tx) => tx.type === 'income')
         .reduce((acc, tx) => acc + tx.amount, 0);
 
     const totalExpense = transactions
-        .filter(tx => tx.type === 'expense')
+        .filter((tx) => tx.type === 'expense')
         .reduce((acc, tx) => acc + tx.amount, 0);
 
     const getStatusBadge = (status: string) => {
         if (status === 'completed') {
-            return { bg: 'bg-green-100', text: 'text-green-700', icon: <CheckCircle2 className="h-3 w-3" /> };
+            return {
+                bg: 'bg-green-100',
+                text: 'text-green-700',
+                icon: <CheckCircle2 className="h-3 w-3" />,
+            };
         }
         if (status === 'pending') {
-            return { bg: 'bg-green-100', text: 'text-green-700', icon: <Clock className="h-3 w-3" /> };
+            return {
+                bg: 'bg-green-100',
+                text: 'text-green-700',
+                icon: <Clock className="h-3 w-3" />,
+            };
         }
-        return { bg: 'bg-green-100', text: 'text-green-700', icon: <XCircle className="h-3 w-3" /> };
+        return {
+            bg: 'bg-green-100',
+            text: 'text-green-700',
+            icon: <XCircle className="h-3 w-3" />,
+        };
     };
 
     const getCategoryIcon = (category: string) => {
@@ -205,7 +216,7 @@ export default function WalletPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+                    <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                     <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                 </div>
 
@@ -230,7 +241,9 @@ export default function WalletPage() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        onClick={() => setShowBalance(!showBalance)}
+                                        onClick={() =>
+                                            setShowBalance(!showBalance)
+                                        }
                                     >
                                         {showBalance ? (
                                             <EyeOff className="h-4 w-4" />
@@ -259,7 +272,9 @@ export default function WalletPage() {
                                         <ArrowDownLeft className="h-5 w-5 text-green-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-600">Total Received</p>
+                                        <p className="text-xs text-gray-600">
+                                            Total Received
+                                        </p>
                                         <p className="text-lg font-bold text-gray-900">
                                             ${totalIncome.toFixed(2)}
                                         </p>
@@ -273,7 +288,9 @@ export default function WalletPage() {
                                         <ArrowUpRight className="h-5 w-5 text-green-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-600">Total Spent</p>
+                                        <p className="text-xs text-gray-600">
+                                            Total Spent
+                                        </p>
                                         <p className="text-lg font-bold text-gray-900">
                                             ${totalExpense.toFixed(2)}
                                         </p>
@@ -287,7 +304,9 @@ export default function WalletPage() {
                                         <TrendingUp className="h-5 w-5 text-purple-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-600">This Month</p>
+                                        <p className="text-xs text-gray-600">
+                                            This Month
+                                        </p>
                                         <p className="text-lg font-bold text-gray-900">
                                             ${(totalExpense * 0.6).toFixed(2)}
                                         </p>
@@ -306,8 +325,12 @@ export default function WalletPage() {
                                 <CreditCard className="h-6 w-6 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-sm font-bold text-gray-900">Payment Methods</p>
-                                <p className="text-xs text-gray-600">{paymentMethods.length} cards</p>
+                                <p className="text-sm font-bold text-gray-900">
+                                    Payment Methods
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                    {paymentMethods.length} cards
+                                </p>
                             </div>
                         </div>
                         <Button variant="outline" size="sm" className="w-full">
@@ -321,8 +344,12 @@ export default function WalletPage() {
                                 <Gift className="h-6 w-6 text-purple-600" />
                             </div>
                             <div>
-                                <p className="text-sm font-bold text-gray-900">Vouchers</p>
-                                <p className="text-xs text-gray-600">{availableVouchers} available</p>
+                                <p className="text-sm font-bold text-gray-900">
+                                    Vouchers
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                    {availableVouchers} available
+                                </p>
                             </div>
                         </div>
                         <Button variant="outline" size="sm" className="w-full">
@@ -336,8 +363,12 @@ export default function WalletPage() {
                                 <Zap className="h-6 w-6 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-sm font-bold text-gray-900">Free Consultations</p>
-                                <p className="text-xs text-gray-600">{freeConsultations} remaining</p>
+                                <p className="text-sm font-bold text-gray-900">
+                                    Free Consultations
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                    {freeConsultations} remaining
+                                </p>
                             </div>
                         </div>
                         <Button variant="outline" size="sm" className="w-full">
@@ -351,8 +382,12 @@ export default function WalletPage() {
                                 <Shield className="h-6 w-6 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-sm font-bold text-gray-900">Secure Payments</p>
-                                <p className="text-xs text-gray-600">SSL encrypted</p>
+                                <p className="text-sm font-bold text-gray-900">
+                                    Secure Payments
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                    SSL encrypted
+                                </p>
                             </div>
                         </div>
                         <Button variant="outline" size="sm" className="w-full">
@@ -379,7 +414,7 @@ export default function WalletPage() {
                                 onClick={() => setActiveTab('all')}
                                 className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
                                     activeTab === 'all'
-                                        ? 'bg-green-600 text-white shadow-md'
+                                        ? 'bg-blue-600 text-white shadow-md'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                             >
@@ -399,7 +434,7 @@ export default function WalletPage() {
                                 onClick={() => setActiveTab('expense')}
                                 className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
                                     activeTab === 'expense'
-                                        ? 'bg-green-600 text-white shadow-md'
+                                        ? 'bg-red-600 text-white shadow-md'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                             >
@@ -410,17 +445,25 @@ export default function WalletPage() {
 
                     <div className="divide-y divide-gray-200">
                         {filteredTransactions.map((transaction) => {
-                            const statusInfo = getStatusBadge(transaction.status);
+                            const statusInfo = getStatusBadge(
+                                transaction.status,
+                            );
                             return (
                                 <div
                                     key={transaction.id}
                                     className="p-6 transition-all hover:bg-gray-50"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl text-2xl ${
-                                            transaction.type === 'income' ? 'bg-green-100' : 'bg-green-100'
-                                        }`}>
-                                            {getCategoryIcon(transaction.category)}
+                                        <div
+                                            className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl text-2xl ${
+                                                transaction.type === 'income'
+                                                    ? 'bg-green-100'
+                                                    : 'bg-green-100'
+                                            }`}
+                                        >
+                                            {getCategoryIcon(
+                                                transaction.category,
+                                            )}
                                         </div>
 
                                         <div className="flex-1">
@@ -430,16 +473,28 @@ export default function WalletPage() {
                                                         {transaction.title}
                                                     </h3>
                                                     <p className="text-sm text-gray-600">
-                                                        {transaction.description}
+                                                        {
+                                                            transaction.description
+                                                        }
                                                     </p>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className={`text-lg font-bold ${
-                                                        transaction.type === 'income'
-                                                            ? 'text-green-600'
-                                                            : 'text-green-600'
-                                                    }`}>
-                                                        {transaction.type === 'income' ? '+' : '-'}${transaction.amount.toFixed(2)}
+                                                    <p
+                                                        className={`text-lg font-bold ${
+                                                            transaction.type ===
+                                                            'income'
+                                                                ? 'text-green-600'
+                                                                : 'text-green-600'
+                                                        }`}
+                                                    >
+                                                        {transaction.type ===
+                                                        'income'
+                                                            ? '+'
+                                                            : '-'}
+                                                        $
+                                                        {transaction.amount.toFixed(
+                                                            2,
+                                                        )}
                                                     </p>
                                                 </div>
                                             </div>
@@ -448,17 +503,31 @@ export default function WalletPage() {
                                                 <div className="flex items-center gap-3 text-xs text-gray-500">
                                                     <span className="flex items-center gap-1">
                                                         <Calendar className="h-3 w-3" />
-                                                        {new Date(transaction.date).toLocaleDateString('en-US', {
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                            year: 'numeric',
-                                                        })}
+                                                        {new Date(
+                                                            transaction.date,
+                                                        ).toLocaleDateString(
+                                                            'en-US',
+                                                            {
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                                year: 'numeric',
+                                                            },
+                                                        )}
                                                     </span>
-                                                    <span>{transaction.time}</span>
+                                                    <span>
+                                                        {transaction.time}
+                                                    </span>
                                                 </div>
-                                                <div className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${statusInfo.bg} ${statusInfo.text}`}>
+                                                <div
+                                                    className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${statusInfo.bg} ${statusInfo.text}`}
+                                                >
                                                     {statusInfo.icon}
-                                                    {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
+                                                    {transaction.status
+                                                        .charAt(0)
+                                                        .toUpperCase() +
+                                                        transaction.status.slice(
+                                                            1,
+                                                        )}
                                                 </div>
                                             </div>
                                         </div>
