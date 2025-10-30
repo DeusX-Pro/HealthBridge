@@ -6,7 +6,6 @@ import { Head, usePage } from '@inertiajs/react';
 import {
     Bell,
     Camera,
-    ChevronRight,
     Globe,
     HelpCircle,
     Lock,
