@@ -18,7 +18,7 @@ require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 
 // Admin Route Starts 
-require __DIR__ . '/admin/index.php';
+require __DIR__ . '/admin/dashboard.php';
 // Admin Route Ends
 
 // Doctor Route Starts
