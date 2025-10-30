@@ -8,7 +8,7 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::middleware(['auth', RoleMiddleware::class])->group(function () {
+Route::middleware(['auth', 'verified', RoleMiddleware::class])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
@@ -22,7 +22,7 @@ require __DIR__ . '/admin/index.php';
 // Admin Route Ends
 
 // Doctor Route Starts
-require __DIR__ . '/doctor/index.php';
+require __DIR__ . '/doctor/dashboard.php';
 require __DIR__ . '/doctor/appointment.php';
 require __DIR__ . '/doctor/availability.php';
 require __DIR__ . '/doctor/consultation.php';
@@ -39,7 +39,7 @@ require __DIR__ . '/doctor/wallet.php';
 // Doctor Route Ends
 
 // Patient Route Starts
-require __DIR__ . '/patient/index.php';
+require __DIR__ . '/patient/dashboard.php';
 require __DIR__ . '/patient/ai-doctor.php';
 require __DIR__ . '/patient/appointment.php';
 require __DIR__ . '/patient/doctor.php';

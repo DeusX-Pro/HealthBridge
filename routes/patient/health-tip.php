@@ -6,6 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\PatientMiddleware;
 
-Route::middleware(['auth', PatientMiddleware::class])->group(function () {
+Route::middleware(['auth', 'verified', PatientMiddleware::class])->group(function () {
     Route::get('patient/health-tips', [HealthTipController::class, 'index'])->name('patient.health-tips');
 });

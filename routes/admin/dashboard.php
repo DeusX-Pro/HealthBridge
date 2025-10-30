@@ -6,6 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\AdminMiddleware;
 
-Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+Route::middleware(['auth', 'verified', AdminMiddleware::class])->group(function () {
     Route::get('admin/dashboard', [IndexController::class, 'index'])->name('admin.dashboard');
 });
