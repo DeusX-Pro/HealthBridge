@@ -228,9 +228,6 @@ export default function Register() {
                                                     <option value="other">
                                                         Other
                                                     </option>
-                                                    <option value="prefer_not_to_say">
-                                                        Prefer not to say
-                                                    </option>
                                                 </select>
                                                 <InputError
                                                     message={errors.gender}
