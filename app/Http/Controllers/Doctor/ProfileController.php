@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
     //
-        public function index(): Response
+    public function index(): Response
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();

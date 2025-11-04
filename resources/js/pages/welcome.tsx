@@ -154,7 +154,7 @@ export default function LandingPage({ user }: LandingPageProps) {
                                                 : 'text-white hover:bg-white/10'
                                         }`}
                                     >
-                                        Log In
+                                        Login
                                     </Link>
                                     <Link
                                         href="/register"
@@ -200,32 +200,31 @@ export default function LandingPage({ user }: LandingPageProps) {
                                 </button>
                             ))}
                             <div className="mt-4 space-y-2 px-4">
-                                
                                 {user ? (
-                                <>
-                                    <Link
-                                        href="/dashboard"
-                                        className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
-                                    >
-                                        Dashboard
-                                    </Link>
-                                </>
-                            ) : (
-                                <>
-                                    <Link
-                                        href="/login"
-                                        className="block w-full rounded-lg border border-gray-300 px-5 py-2.5 text-center font-semibold text-gray-700 transition-all hover:bg-gray-50"
-                                    >
-                                        Log In
-                                    </Link>
-                                    <Link
-                                        href="/register"
-                                        className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
-                                    >
-                                        Get Started
-                                    </Link>
-                                </>
-                            )}
+                                    <>
+                                        <Link
+                                            href="/dashboard"
+                                            className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
+                                        >
+                                            Dashboard
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href="/login"
+                                            className="block w-full rounded-lg border border-gray-300 px-5 py-2.5 text-center font-semibold text-gray-700 transition-all hover:bg-gray-50"
+                                        >
+                                            Login
+                                        </Link>
+                                        <Link
+                                            href="/register"
+                                            className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
+                                        >
+                                            Get Started
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}
@@ -954,6 +953,228 @@ export default function LandingPage({ user }: LandingPageProps) {
                 </div>
             </section>
 
+            {/* ===== For Doctors Section ===== */}
+            <section className="relative overflow-hidden bg-gradient-to-br from-green-50 via-indigo-50 to-purple-50 px-6 py-24 md:px-12 lg:px-24">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5">
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            backgroundImage:
+                                'radial-gradient(circle at 1px 1px, rgb(99 102 241) 1px, transparent 0)',
+                            backgroundSize: '40px 40px',
+                        }}
+                    ></div>
+                </div>
+
+                {/* Decorative Blobs */}
+                <div className="animate-blob absolute top-20 left-20 h-64 w-64 rounded-full bg-green-300 opacity-20 mix-blend-multiply blur-3xl filter"></div>
+                <div className="animate-blob animation-delay-2000 absolute right-20 bottom-20 h-64 w-64 rounded-full bg-indigo-300 opacity-20 mix-blend-multiply blur-3xl filter"></div>
+
+                <div className="relative mx-auto max-w-7xl">
+                    <div className="grid items-center gap-12 lg:grid-cols-2">
+                        {/* Left Column - Content */}
+                        <div className="animate-fade-in-left">
+                            {/* Badge */}
+                            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
+                                <Stethoscope className="h-4 w-4" />
+                                For Healthcare Professionals
+                            </div>
+
+                            {/* Heading */}
+                            <h2 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl">
+                                Join Our Network of{' '}
+                                <span className="bg-gradient-to-r from-green-600 to-indigo-600 bg-clip-text text-transparent">
+                                    Elite Doctors
+                                </span>
+                            </h2>
+
+                            {/* Description */}
+                            <p className="mb-8 text-xl leading-relaxed text-gray-600">
+                                Expand your practice, reach more patients, and
+                                provide care on your terms. Health Bridge
+                                empowers you with cutting-edge technology and a
+                                seamless platform.
+                            </p>
+
+                            {/* Benefits List */}
+                            <div className="mb-8 space-y-4">
+                                {[
+                                    {
+                                        icon: (
+                                            <TrendingUp className="h-5 w-5" />
+                                        ),
+                                        title: 'Grow Your Practice',
+                                        desc: 'Access thousands of patients seeking quality care',
+                                    },
+                                    {
+                                        icon: <Clock className="h-5 w-5" />,
+                                        title: 'Flexible Schedule',
+                                        desc: 'Set your own hours and consultation fees',
+                                    },
+                                    {
+                                        icon: (
+                                            <ShieldCheck className="h-5 w-5" />
+                                        ),
+                                        title: 'Secure Platform',
+                                        desc: 'HIPAA-compliant with blockchain-backed records',
+                                    },
+                                ].map((benefit, i) => (
+                                    <div
+                                        key={i}
+                                        className="flex gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-md transition-all duration-300 hover:shadow-lg"
+                                    >
+                                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-green-600 to-indigo-600 text-white shadow-md">
+                                            {benefit.icon}
+                                        </div>
+                                        <div>
+                                            <h4 className="mb-1 font-semibold text-gray-900">
+                                                {benefit.title}
+                                            </h4>
+                                            <p className="text-sm text-gray-600">
+                                                {benefit.desc}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* CTA Button */}
+                            {/* <Link
+                                href="/doctor-register"
+                                className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-green-600 to-indigo-600 px-8 py-4 font-bold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                            >
+                                Register as a Doctor
+                                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                            </Link>
+
+                            <p className="mt-4 text-sm text-gray-600">
+                                Already registered?{' '}
+                                <Link
+                                    href="/doctor-login"
+                                    className="font-semibold text-green-600 hover:text-green-700"
+                                >
+                                    Sign in here
+                                </Link>
+                            </p> */}
+                        </div>
+
+                        {/* Right Column - Stats & Testimonial */}
+                        <div className="animate-fade-in-right space-y-6">
+                            {/* Stats Grid */}
+                            <div className="grid grid-cols-2 gap-6">
+                                {[
+                                    {
+                                        number: '500+',
+                                        label: 'Active Doctors',
+                                        icon: <Users className="h-8 w-8" />,
+                                        gradient: 'from-green-600 to-cyan-600',
+                                    },
+                                    {
+                                        number: '$5K+',
+                                        label: 'Avg. Monthly Income',
+                                        icon: (
+                                            <TrendingUp className="h-8 w-8" />
+                                        ),
+                                        gradient:
+                                            'from-green-600 to-emerald-600',
+                                    },
+                                    {
+                                        number: '50K+',
+                                        label: 'Consultations',
+                                        icon: <Video className="h-8 w-8" />,
+                                        gradient: 'from-purple-600 to-pink-600',
+                                    },
+                                    {
+                                        number: '4.9★',
+                                        label: 'Doctor Rating',
+                                        icon: <Star className="h-8 w-8" />,
+                                        gradient: 'from-orange-600 to-red-600',
+                                    },
+                                ].map((stat, i) => (
+                                    <div
+                                        key={i}
+                                        className="group transform rounded-2xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                                    >
+                                        <div
+                                            className={`mb-3 inline-flex rounded-xl bg-gradient-to-br ${stat.gradient} p-3 text-white`}
+                                        >
+                                            {stat.icon}
+                                        </div>
+                                        <div className="text-3xl font-bold text-gray-900">
+                                            {stat.number}
+                                        </div>
+                                        <div className="text-sm text-gray-600">
+                                            {stat.label}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Doctor Testimonial */}
+                            <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-xl">
+                                <div className="mb-4 flex items-center gap-1">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                                        />
+                                    ))}
+                                </div>
+                                <p className="mb-6 leading-relaxed text-gray-700 italic">
+                                    "Health Bridge has transformed my practice.
+                                    I can now reach patients across the country,
+                                    manage my schedule flexibly, and the
+                                    blockchain security gives both me and my
+                                    patients peace of mind."
+                                </p>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-green-600 to-indigo-600 text-xl font-bold text-white">
+                                        👨‍⚕️
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-900">
+                                            Dr. Adebayo Okonkwo
+                                        </div>
+                                        <div className="text-sm text-gray-600">
+                                            General Practitioner • Lagos
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Trust Badges */}
+                            <div className="flex flex-wrap gap-3">
+                                {[
+                                    {
+                                        icon: (
+                                            <ShieldCheck className="h-4 w-4" />
+                                        ),
+                                        text: 'Verified Credentials',
+                                    },
+                                    {
+                                        icon: <Lock className="h-4 w-4" />,
+                                        text: 'Secure Payments',
+                                    },
+                                    {
+                                        icon: <Award className="h-4 w-4" />,
+                                        text: 'Professional Support',
+                                    },
+                                ].map((badge, i) => (
+                                    <div
+                                        key={i}
+                                        className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-sm font-medium text-green-700"
+                                    >
+                                        {badge.icon}
+                                        <span>{badge.text}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* ===== CTA Section ===== */}
             <section className="relative overflow-hidden bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 px-6 py-24 text-white">
                 {/* Animated Background */}
@@ -1174,6 +1395,12 @@ export default function LandingPage({ user }: LandingPageProps) {
                                 href="/terms"
                                 className="transition-colors hover:text-green-400"
                             >
+                                Create a Professional Account
+                            </Link>
+                            <Link
+                                href="/terms"
+                                className="transition-colors hover:text-green-400"
+                            >
                                 Terms
                             </Link>
                             <Link
@@ -1192,13 +1419,6 @@ export default function LandingPage({ user }: LandingPageProps) {
                     </div>
                 </div>
             </footer>
-
-            {/* Custom CSS for animations */}
-            <style>
-                {`
-                
-                `}
-            </style>
         </div>
     );
 }
