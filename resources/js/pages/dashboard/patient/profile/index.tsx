@@ -8,16 +8,32 @@ import {
     Activity,
     AlertCircle,
     Award,
+    Briefcase,
+    Building2,
     Calendar,
+    Car,
+    CreditCard,
     Edit,
+    Gauge,
+    Globe,
     Heart,
+    Home,
+    Languages,
     Mail,
     MailPlus,
     MailWarning,
     MapPin,
     Phone,
+    Pill,
+    QrCode,
+    Ruler,
+    Scale,
     Shield,
+    Stethoscope,
+    Syringe,
     User,
+    Users,
+    Video,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -29,12 +45,43 @@ interface Patient {
     id: number;
     user_id: number;
     uuid: string;
+
+    // PERSONAL INFORMATION
+    national_id: string | null;
+    address: string | null;
+    city: string | null;
+    state: string | null;
+    postal_code: string | null;
+    occupation: string | null;
+
+    // HEALTH & MEDICAL INFORMATION
     blood_type: string | null;
     allergies: string | null;
     chronic_conditions: string | null;
+    current_medications: string | null;
+    surgical_history: string | null;
+    family_medical_history: string | null;
+    immunization_record: string | null;
+    height: number | null;
+    weight: number | null;
+    bmi: number | null;
+    lifestyle_habits: string | null;
+    disability_details: string | null;
+
+    // EMERGENCY CONTACT INFORMATION
     emergency_contact_name: string | null;
+    emergency_contact_relationship: string | null;
     emergency_contact_phone: string | null;
+    emergency_contact_email: string | null;
+    preferred_hospital: string | null;
+
+    // SYSTEM & PREFERENCES
+    preferred_language: string | null;
+    preferred_consultation_type: 'video' | 'audio' | 'text';
+    preferred_doctor_gender: 'male' | 'female' | 'any';
+    qr_code_path: string | null;
     status: 'active' | 'pending' | 'inactive';
+
     created_at: string;
     updated_at: string;
 }
@@ -137,10 +184,10 @@ export default function Dashboard() {
                                     <img
                                         src={'/storage/' + user.profile_picture}
                                         alt={user.name}
-                                        className="h-28 w-28 rounded-2xl border-4 border-white/20 object-cover shadow-2xl ring-4 ring-white/10"
+                                        className="h-28 w-28 rounded-full object-cover shadow-2xl ring-4 ring-white/10"
                                     />
                                 ) : (
-                                    <div className="flex h-28 w-28 items-center justify-center rounded-2xl border-4 border-white/20 bg-white/20 shadow-2xl ring-4 ring-white/10">
+                                    <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 shadow-2xl ring-4 ring-white/10">
                                         <span className="text-4xl font-bold text-white">
                                             {getInitials(user.name)}
                                         </span>
@@ -212,110 +259,238 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* Account Stats */}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                    <Card className="border-0 bg-gradient-to-br from-green-50 to-green-50 p-5 shadow-md">
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+                    <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50 p-4 shadow-md">
                         <p className="mb-1 text-xs text-gray-600 uppercase">
-                            Account Status
+                            Status
                         </p>
-                        <p className="text-xl font-semibold capitalize">
+                        <p className="text-lg font-semibold capitalize">
                             {user.status}
                         </p>
                     </Card>
-                    <Card className="border-0 bg-gradient-to-br from-emerald-50 to-teal-50 p-5 shadow-md">
+                    <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 p-4 shadow-md">
                         <p className="mb-1 text-xs text-gray-600 uppercase">
                             Member Since
                         </p>
-                        <p className="text-xl font-semibold capitalize">
+                        <p className="text-lg font-semibold">
                             {new Date(user.created_at).getFullYear()}
                         </p>
                     </Card>
                     {patient && (
                         <>
-                            <Card className="border-0 bg-gradient-to-br from-rose-50 to-pink-50 p-5 shadow-md">
+                            <Card className="border-0 bg-gradient-to-br from-rose-50 to-pink-50 p-4 shadow-md">
                                 <p className="mb-1 text-xs text-gray-600 uppercase">
                                     Blood Type
                                 </p>
-                                <p className="text-xl font-semibold capitalize">
+                                <p className="text-lg font-semibold">
                                     {patient.blood_type || 'N/A'}
                                 </p>
                             </Card>
-                            <Card className="border-0 bg-gradient-to-br from-green-50 to-violet-50 p-5 shadow-md">
+                            <Card className="border-0 bg-gradient-to-br from-purple-50 to-violet-50 p-4 shadow-md">
                                 <p className="mb-1 text-xs text-gray-600 uppercase">
-                                    Patient Status
+                                    Height
                                 </p>
-                                <p className="text-xl font-semibold capitalize">
-                                    {patient.status}
+                                <p className="text-lg font-semibold">
+                                    {patient.height
+                                        ? `${patient.height} cm`
+                                        : 'N/A'}
+                                </p>
+                            </Card>
+                            <Card className="border-0 bg-gradient-to-br from-amber-50 to-orange-50 p-4 shadow-md">
+                                <p className="mb-1 text-xs text-gray-600 uppercase">
+                                    Weight
+                                </p>
+                                <p className="text-lg font-semibold">
+                                    {patient.weight
+                                        ? `${patient.weight} kg`
+                                        : 'N/A'}
+                                </p>
+                            </Card>
+                            <Card className="border-0 bg-gradient-to-br from-cyan-50 to-teal-50 p-4 shadow-md">
+                                <p className="mb-1 text-xs text-gray-600 uppercase">
+                                    BMI
+                                </p>
+                                <p className="text-lg font-semibold">
+                                    {patient.bmi || 'N/A'}
                                 </p>
                             </Card>
                         </>
                     )}
                 </div>
 
-                {/* --- SINGLE COLUMN CONTENT --- */}
+                {/* Main Content */}
                 <div className="space-y-8">
-                    {/* Contact Information (includes emergency contact) */}
-                    <Card className="border-0 p-6 shadow-xl transition-all duration-300 hover:shadow-2xl">
-                        <div className="mb-6 flex items-center gap-3">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
-                                <User className="h-5 w-5 text-white" />
+                    {/* Personal Information */}
+                    {patient && (
+                        <Card className="border-0 p-6 shadow-xl">
+                            <SectionHeader
+                                icon={<Home className="h-5 w-5 text-white" />}
+                                title="Personal Information"
+                                subtitle="Your personal details and address"
+                                bg="from-blue-500 to-indigo-600"
+                            />
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <InfoItem
+                                    icon={
+                                        <CreditCard className="h-5 w-5 text-blue-600" />
+                                    }
+                                    label="National ID"
+                                    value={
+                                        patient.national_id || 'Not provided'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Briefcase className="h-5 w-5 text-purple-600" />
+                                    }
+                                    label="Occupation"
+                                    value={patient.occupation || 'Not provided'}
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Home className="h-5 w-5 text-green-600" />
+                                    }
+                                    label="Address"
+                                    value={patient.address || 'Not provided'}
+                                    fullWidth
+                                />
+                                <InfoItem
+                                    icon={
+                                        <MapPin className="h-5 w-5 text-red-600" />
+                                    }
+                                    label="City"
+                                    value={patient.city || 'Not provided'}
+                                />
+                                <InfoItem
+                                    icon={
+                                        <MapPin className="h-5 w-5 text-orange-600" />
+                                    }
+                                    label="State"
+                                    value={patient.state || 'Not provided'}
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Mail className="h-5 w-5 text-blue-600" />
+                                    }
+                                    label="Postal Code"
+                                    value={
+                                        patient.postal_code || 'Not provided'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Globe className="h-5 w-5 text-green-600" />
+                                    }
+                                    label="Country"
+                                    value={user.country || 'Not provided'}
+                                />
                             </div>
-                            <div>
-                                <h3 className="text-xl font-semibold text-gray-900">
-                                    Contact Information
-                                </h3>
-                                <p className="text-sm text-gray-500">
-                                    Your personal and emergency contact details
-                                </p>
-                            </div>
-                        </div>
+                        </Card>
+                    )}
 
+                    {/* Contact Information */}
+                    <Card className="border-0 p-6 shadow-xl">
+                        <SectionHeader
+                            icon={<User className="h-5 w-5 text-white" />}
+                            title="Contact Information"
+                            subtitle="Your contact details"
+                            bg="from-green-500 to-emerald-600"
+                        />
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <ContactItem
+                            <InfoItem
                                 icon={
                                     <Mail className="h-5 w-5 text-green-600" />
                                 }
                                 label="Email"
                                 value={user.email}
                             />
-                            <ContactItem
+                            <InfoItem
                                 icon={
                                     <Phone className="h-5 w-5 text-emerald-600" />
                                 }
                                 label="Phone"
                                 value={user.phone_number}
                             />
-                            <ContactItem
+                            <InfoItem
                                 icon={
                                     <Calendar className="h-5 w-5 text-green-600" />
                                 }
                                 label="Date of Birth"
                                 value={formatDate(user.date_of_birth)}
                             />
-                            <ContactItem
+                            <InfoItem
                                 icon={
-                                    <MapPin className="h-5 w-5 text-orange-600" />
+                                    <User className="h-5 w-5 text-blue-600" />
                                 }
-                                label="Country"
-                                value={user.country || 'Not provided'}
-                            />
-
-                            <ContactItem
-                                icon={<User className="h-5 w-5 text-red-600" />}
-                                label="Emergency Contact Name"
-                                value={patient?.emergency_contact_name || 'N/A'}
-                            />
-                            <ContactItem
-                                icon={
-                                    <Phone className="h-5 w-5 text-red-600" />
-                                }
-                                label="Emergency Contact Phone"
+                                label="Gender"
                                 value={
-                                    patient?.emergency_contact_phone || 'N/A'
+                                    user.gender
+                                        ? user.gender.charAt(0).toUpperCase() +
+                                          user.gender.slice(1)
+                                        : 'Not provided'
                                 }
                             />
                         </div>
                     </Card>
+
+                    {/* Health Metrics */}
+                    {patient && (
+                        <Card className="border-0 bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50 p-6 shadow-xl">
+                            <SectionHeader
+                                icon={<Gauge className="h-5 w-5 text-white" />}
+                                title="Health Metrics"
+                                subtitle="Physical measurements and vital statistics"
+                                bg="from-purple-500 to-violet-600"
+                            />
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                                <MetricCard
+                                    icon={
+                                        <Ruler className="h-5 w-5 text-white" />
+                                    }
+                                    label="Height"
+                                    value={
+                                        patient.height
+                                            ? `${patient.height} cm`
+                                            : 'Not recorded'
+                                    }
+                                    color="purple"
+                                />
+                                <MetricCard
+                                    icon={
+                                        <Scale className="h-5 w-5 text-white" />
+                                    }
+                                    label="Weight"
+                                    value={
+                                        patient.weight
+                                            ? `${patient.weight} kg`
+                                            : 'Not recorded'
+                                    }
+                                    color="amber"
+                                />
+                                <MetricCard
+                                    icon={
+                                        <Gauge className="h-5 w-5 text-white" />
+                                    }
+                                    label="BMI"
+                                    value={
+                                        patient.bmi
+                                            ? patient.bmi.toString()
+                                            : 'Not calculated'
+                                    }
+                                    color="cyan"
+                                />
+                                <MetricCard
+                                    icon={
+                                        <Heart className="h-5 w-5 text-white" />
+                                    }
+                                    label="Blood Type"
+                                    value={patient.blood_type || 'Unknown'}
+                                    color="rose"
+                                />
+                            </div>
+                        </Card>
+                    )}
 
                     {/* Medical Information */}
                     {patient && (
@@ -323,17 +498,10 @@ export default function Dashboard() {
                             <SectionHeader
                                 icon={<Heart className="h-5 w-5 text-white" />}
                                 title="Medical Information"
-                                subtitle="Health records and conditions"
+                                subtitle="Health records and medical history"
                                 bg="from-rose-500 to-red-600"
                             />
-                            <div className="space-y-4">
-                                <MedicalItem
-                                    icon={
-                                        <Shield className="h-4 w-4 text-rose-600" />
-                                    }
-                                    label="Blood Type"
-                                    value={patient.blood_type || '—'}
-                                />
+                            <div className="grid gap-4 space-y-4 md:grid-cols-2">
                                 <MedicalListItem
                                     icon={
                                         <AlertCircle className="h-4 w-4 text-orange-600" />
@@ -352,6 +520,221 @@ export default function Dashboard() {
                                     )}
                                     emptyMessage="No chronic conditions reported"
                                 />
+                                <MedicalListItem
+                                    icon={
+                                        <Pill className="h-4 w-4 text-blue-600" />
+                                    }
+                                    label="Current Medications"
+                                    items={parseArrayString(
+                                        patient.current_medications,
+                                    )}
+                                    emptyMessage="No current medications"
+                                />
+                                <MedicalListItem
+                                    icon={
+                                        <Stethoscope className="h-4 w-4 text-green-600" />
+                                    }
+                                    label="Surgical History"
+                                    items={parseArrayString(
+                                        patient.surgical_history,
+                                    )}
+                                    emptyMessage="No surgical history"
+                                />
+                                <MedicalListItem
+                                    icon={
+                                        <Users className="h-4 w-4 text-purple-600" />
+                                    }
+                                    label="Family Medical History"
+                                    items={parseArrayString(
+                                        patient.family_medical_history,
+                                    )}
+                                    emptyMessage="No family medical history recorded"
+                                />
+                                <MedicalListItem
+                                    icon={
+                                        <Syringe className="h-4 w-4 text-cyan-600" />
+                                    }
+                                    label="Immunization Record"
+                                    items={parseArrayString(
+                                        patient.immunization_record,
+                                    )}
+                                    emptyMessage="No immunization records"
+                                />
+                            </div>
+                        </Card>
+                    )}
+
+                    {/* Lifestyle & Habits */}
+                    {patient && (
+                        <Card className="border-0 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 p-6 shadow-xl">
+                            <SectionHeader
+                                icon={
+                                    <Activity className="h-5 w-5 text-white" />
+                                }
+                                title="Lifestyle & Habits"
+                                subtitle="Your daily habits and health information"
+                                bg="from-amber-500 to-orange-600"
+                            />
+                            <div className="space-y-4">
+                                <InfoItem
+                                    icon={
+                                        <Car className="h-5 w-5 text-amber-600" />
+                                    }
+                                    label="Lifestyle Habits"
+                                    value={
+                                        patient.lifestyle_habits ||
+                                        'Not provided'
+                                    }
+                                    fullWidth
+                                />
+
+                                <InfoItem
+                                    icon={
+                                        <Shield className="h-5 w-5 text-amber-600" />
+                                    }
+                                    label="Disability Details"
+                                    value={
+                                        patient.disability_details ||
+                                        'Not provided'
+                                    }
+                                    fullWidth
+                                />
+                            </div>
+                        </Card>
+                    )}
+
+                    {/* Emergency Contact */}
+                    {patient && (
+                        <Card className="border-0 bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 p-6 shadow-xl">
+                            <SectionHeader
+                                icon={
+                                    <AlertCircle className="h-5 w-5 text-white" />
+                                }
+                                title="Emergency Contact"
+                                subtitle="Important contact information for emergencies"
+                                bg="from-red-500 to-orange-600"
+                            />
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <InfoItem
+                                    icon={
+                                        <User className="h-5 w-5 text-red-600" />
+                                    }
+                                    label="Contact Name"
+                                    value={
+                                        patient.emergency_contact_name ||
+                                        'Not provided'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Users className="h-5 w-5 text-orange-600" />
+                                    }
+                                    label="Relationship"
+                                    value={
+                                        patient.emergency_contact_relationship ||
+                                        'Not provided'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Phone className="h-5 w-5 text-red-600" />
+                                    }
+                                    label="Contact Phone"
+                                    value={
+                                        patient.emergency_contact_phone ||
+                                        'Not provided'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Mail className="h-5 w-5 text-orange-600" />
+                                    }
+                                    label="Contact Email"
+                                    value={
+                                        patient.emergency_contact_email ||
+                                        'Not provided'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Building2 className="h-5 w-5 text-red-600" />
+                                    }
+                                    label="Preferred Hospital"
+                                    value={
+                                        patient.preferred_hospital ||
+                                        'Not provided'
+                                    }
+                                    fullWidth
+                                />
+                            </div>
+                        </Card>
+                    )}
+
+                    {/* Preferences & Settings */}
+                    {patient && (
+                        <Card className="border-0 bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50 p-6 shadow-xl">
+                            <SectionHeader
+                                icon={<Shield className="h-5 w-5 text-white" />}
+                                title="Preferences & Settings"
+                                subtitle="Your consultation and system preferences"
+                                bg="from-indigo-500 to-blue-600"
+                            />
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <InfoItem
+                                    icon={
+                                        <Languages className="h-5 w-5 text-indigo-600" />
+                                    }
+                                    label="Preferred Language"
+                                    value={
+                                        patient.preferred_language || 'Not set'
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <Video className="h-5 w-5 text-blue-600" />
+                                    }
+                                    label="Consultation Type"
+                                    value={
+                                        patient.preferred_consultation_type
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                        patient.preferred_consultation_type.slice(
+                                            1,
+                                        )
+                                    }
+                                />
+                                <InfoItem
+                                    icon={
+                                        <User className="h-5 w-5 text-cyan-600" />
+                                    }
+                                    label="Preferred Doctor Gender"
+                                    value={
+                                        patient.preferred_doctor_gender
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                        patient.preferred_doctor_gender.slice(1)
+                                    }
+                                />
+                                {patient.qr_code_path && (
+                                    <div className="rounded-xl border border-indigo-100 bg-white p-5 shadow-sm">
+                                        <div className="mb-3 flex items-center gap-3">
+                                            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100">
+                                                <QrCode className="h-4 w-4 text-indigo-600" />
+                                            </div>
+                                            <p className="text-xs font-bold tracking-wider text-gray-600 uppercase">
+                                                Patient QR Code
+                                            </p>
+                                        </div>
+                                        <img
+                                            src={
+                                                '/storage/' +
+                                                patient.qr_code_path
+                                            }
+                                            alt="Patient QR Code"
+                                            className="h-32 w-32 rounded-lg border-2 border-indigo-200"
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </Card>
                     )}
@@ -360,8 +743,8 @@ export default function Dashboard() {
                     <Card className="border-0 bg-gradient-to-br from-slate-50 to-gray-100 p-6 shadow-xl">
                         <SectionHeader
                             icon={<Shield className="h-5 w-5 text-white" />}
-                            title="Account IDs"
-                            subtitle="System identifiers"
+                            title="Account Details"
+                            subtitle="System identifiers and account information"
                             bg="from-slate-600 to-gray-700"
                         />
                         <div className="space-y-4">
@@ -373,13 +756,15 @@ export default function Dashboard() {
                                 />
                             )}
                             <AccountItem
-                                label="Date Created"
+                                label="Account Created"
                                 value={new Date(
                                     user.created_at,
                                 ).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
                                 })}
                             />
                             <AccountItem
@@ -390,6 +775,8 @@ export default function Dashboard() {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
                                 })}
                             />
                         </div>
@@ -400,34 +787,45 @@ export default function Dashboard() {
     );
 }
 
-/* --- Subcomponents for cleaner JSX --- */
-const ContactItem = ({ icon, label, value }: any) => (
-    <div className="group flex items-start gap-4 rounded-xl border border-gray-100 bg-gradient-to-br from-gray-50 to-slate-50 p-5 transition-all hover:border-green-200 hover:shadow-md">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white">
+/* --- Subcomponents --- */
+const InfoItem = ({ icon, label, value, fullWidth = false }: any) => (
+    <div
+        className={`group flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-5 transition-all hover:border-green-200 hover:shadow-md ${fullWidth ? 'sm:col-span-2' : ''}`}
+    >
+        <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-slate-50">
             {icon}
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
             <p className="mb-1.5 text-xs font-medium text-gray-500 uppercase">
                 {label}
             </p>
-            <p className="font-medium text-gray-900">{value}</p>
+            <p className="font-medium break-words text-gray-900">{value}</p>
         </div>
     </div>
 );
 
-const MedicalItem = ({ icon, label, value }: any) => (
-    <div className="rounded-xl border border-rose-100 bg-white p-5 shadow-sm">
-        <div className="mb-2 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-100">
+const MetricCard = ({ icon, label, value, color }: any) => {
+    const colorClasses: Record<string, string> = {
+        purple: 'from-purple-500 to-violet-600',
+        amber: 'from-amber-500 to-orange-600',
+        cyan: 'from-cyan-500 to-teal-600',
+        rose: 'from-rose-500 to-pink-600',
+    };
+
+    return (
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-md transition-all hover:shadow-lg">
+            <div
+                className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${colorClasses[color]} shadow-md`}
+            >
                 {icon}
             </div>
-            <p className="text-xs font-bold tracking-wider text-gray-600 uppercase">
+            <p className="mb-1 text-xs font-medium text-gray-500 uppercase">
                 {label}
             </p>
+            <p className="text-xl font-bold text-gray-900">{value}</p>
         </div>
-        <p className="font-semibold text-gray-900">{value}</p>
-    </div>
-);
+    );
+};
 
 const MedicalListItem = ({ icon, label, items, emptyMessage }: any) => (
     <div className="rounded-xl border border-rose-100 bg-white p-5 shadow-sm">
@@ -444,22 +842,22 @@ const MedicalListItem = ({ icon, label, items, emptyMessage }: any) => (
                 {items.map((item: string, index: number) => (
                     <li
                         key={index}
-                        className="flex items-center gap-2 font-semibold text-gray-900"
+                        className="flex items-center gap-2 font-medium text-gray-900"
                     >
-                        <span className="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-                        {item}
+                        <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-rose-500"></span>
+                        <span>{item}</span>
                     </li>
                 ))}
             </ul>
         ) : (
-            <p className="font-semibold text-gray-500">{emptyMessage}</p>
+            <p className="font-medium text-gray-500">{emptyMessage}</p>
         )}
     </div>
 );
 
 const AccountItem = ({ label, value }: any) => (
     <div>
-        <p className="mb-1 text-xs font-medium text-gray-600 uppercase">
+        <p className="mb-1.5 text-xs font-medium text-gray-600 uppercase">
             {label}
         </p>
         <div className="rounded-lg border border-gray-200 bg-white p-3 font-mono text-xs break-all text-gray-700">

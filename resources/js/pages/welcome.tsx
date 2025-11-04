@@ -23,7 +23,11 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export default function LandingPage() {
+interface LandingPageProps {
+    user?: any;
+}
+
+export default function LandingPage({ user }: LandingPageProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
@@ -33,14 +37,7 @@ export default function LandingPage() {
             setScrolled(window.scrollY > 50);
 
             // Update active section based on scroll position
-            const sections = [
-                'home',
-                'about',
-                'features',
-                'how-it-works',
-                'testimonials',
-                'pricing',
-            ];
+            const sections = ['home', 'about', 'features', 'how-it-works'];
             const scrollPosition = window.scrollY + 100;
 
             for (const section of sections) {
@@ -81,8 +78,6 @@ export default function LandingPage() {
         { name: 'About', id: 'about' },
         { name: 'Features', id: 'features' },
         { name: 'How It Works', id: 'how-it-works' },
-        { name: 'Testimonials', id: 'testimonials' },
-        { name: 'Pricing', id: 'pricing' },
     ];
 
     return (
@@ -138,24 +133,37 @@ export default function LandingPage() {
                             ))}
                         </div>
 
-                        {/* Auth Buttons */}
+                        {/* Auth Buttons / Dashboard */}
                         <div className="hidden items-center gap-4 md:flex">
-                            <Link
-                                href="/login"
-                                className={`rounded-lg px-5 py-2 font-semibold transition-all ${
-                                    scrolled
-                                        ? 'text-gray-700 hover:text-green-600'
-                                        : 'text-white hover:bg-white/10'
-                                }`}
-                            >
-                                Log In
-                            </Link>
-                            <Link
-                                href="/register"
-                                className="rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700 hover:shadow-lg"
-                            >
-                                Get Started
-                            </Link>
+                            {user ? (
+                                <>
+                                    <Link
+                                        href="/dashboard"
+                                        className="rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700 hover:shadow-lg"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        href="/login"
+                                        className={`rounded-lg px-5 py-2 font-semibold transition-all ${
+                                            scrolled
+                                                ? 'text-gray-700 hover:text-green-600'
+                                                : 'text-white hover:bg-white/10'
+                                        }`}
+                                    >
+                                        Log In
+                                    </Link>
+                                    <Link
+                                        href="/register"
+                                        className="rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700 hover:shadow-lg"
+                                    >
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -192,18 +200,32 @@ export default function LandingPage() {
                                 </button>
                             ))}
                             <div className="mt-4 space-y-2 px-4">
-                                <Link
-                                    href="/login"
-                                    className="block w-full rounded-lg border border-gray-300 px-5 py-2.5 text-center font-semibold text-gray-700 transition-all hover:bg-gray-50"
-                                >
-                                    Log In
-                                </Link>
-                                <Link
-                                    href="/register"
-                                    className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
-                                >
-                                    Get Started
-                                </Link>
+                                
+                                {user ? (
+                                <>
+                                    <Link
+                                        href="/dashboard"
+                                        className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        href="/login"
+                                        className="block w-full rounded-lg border border-gray-300 px-5 py-2.5 text-center font-semibold text-gray-700 transition-all hover:bg-gray-50"
+                                    >
+                                        Log In
+                                    </Link>
+                                    <Link
+                                        href="/register"
+                                        className="block w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2.5 text-center font-semibold text-white shadow-md transition-all hover:from-green-700 hover:to-emerald-700"
+                                    >
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
                             </div>
                         </div>
                     )}
@@ -496,7 +518,7 @@ export default function LandingPage() {
                         </p>
                     </div>
 
-                    <div className="grid items-center gap-12 lg:grid-cols-2 mb-16">
+                    <div className="mb-16 grid items-center gap-12 lg:grid-cols-2">
                         {/* Left Column - Stats Grid */}
                         <div className="animate-fade-in-left grid grid-cols-2 gap-6">
                             {[
@@ -536,7 +558,9 @@ export default function LandingPage() {
                                     <div
                                         className={`absolute top-0 right-0 h-32 w-32 bg-gradient-to-br ${item.gradient} -mt-16 -mr-16 rounded-full opacity-10 transition-transform duration-500 group-hover:scale-150`}
                                     ></div>
-                                    <div className={`relative mb-4 bg-gradient-to-br ${item.gradient} text-white inline-flex p-3 rounded-xl`}>
+                                    <div
+                                        className={`relative mb-4 bg-gradient-to-br ${item.gradient} inline-flex rounded-xl p-3 text-white`}
+                                    >
                                         {item.icon}
                                     </div>
                                     <h3 className="relative mb-2 text-lg font-bold text-gray-900">
@@ -613,9 +637,7 @@ export default function LandingPage() {
                     <div className="animate-fade-in-up flex flex-wrap justify-center gap-4">
                         {[
                             {
-                                icon: (
-                                    <ShieldCheck className="h-5 w-5" />
-                                ),
+                                icon: <ShieldCheck className="h-5 w-5" />,
                                 text: 'HIPAA Compliant',
                                 color: 'from-green-100 to-emerald-100 text-green-700',
                             },
@@ -743,7 +765,9 @@ export default function LandingPage() {
                                     <div
                                         className={`inline-flex rounded-2xl bg-gradient-to-br ${feature.iconBg} mb-6 shadow-lg transition-transform duration-500 group-hover:scale-110`}
                                     >
-                                        <div className={`bg-gradient-to-br ${feature.gradient} p-3 rounded-full text-white`}>
+                                        <div
+                                            className={`bg-gradient-to-br ${feature.gradient} rounded-full p-3 text-white`}
+                                        >
                                             {feature.icon}
                                         </div>
                                     </div>

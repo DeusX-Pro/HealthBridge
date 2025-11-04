@@ -22,6 +22,8 @@ import {
     User,
     File,
     FileImage,
+    Menu,
+    X,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -50,6 +52,7 @@ export default function HealthRecords() {
     const { auth } = usePage<PageProps>().props;
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const healthRecords = [
         {
@@ -201,6 +204,11 @@ export default function HealthRecords() {
         return matchesSearch && matchesCategory;
     });
 
+    const handleCategorySelect = (categoryId: string) => {
+        setSelectedCategory(categoryId);
+        setIsFilterOpen(false); // Close menu after selection on mobile
+    };
+
     const getFileIcon = (fileType: string) => {
         if (fileType === 'pdf')
             return <File className="h-5 w-5 text-red-600" />;
@@ -226,20 +234,20 @@ export default function HealthRecords() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Health Records" />
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 sm:gap-6">
                 {/* Header Section */}
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-green-600 to-green-600 p-6 text-white shadow-xl sm:p-8">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-green-600 to-green-600 p-4 text-white shadow-xl sm:p-6 lg:p-8">
                     <div className="relative z-10">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm">
-                                    <ClipboardList className="h-9 w-9" />
+                            <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm sm:h-16 sm:w-16">
+                                    <ClipboardList className="h-6 w-6 sm:h-9 sm:w-9" />
                                 </div>
                                 <div>
-                                    <h1 className="text-3xl font-bold">
+                                    <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">
                                         Health Records
                                     </h1>
-                                    <p className="mt-1 text-sm text-green-100">
+                                    <p className="mt-1 text-xs text-green-100 sm:text-sm">
                                         Secure access to your complete medical
                                         history
                                     </p>
@@ -253,32 +261,32 @@ export default function HealthRecords() {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+                    <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                     <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                 </div>
 
                 {/* Quick Medical Info */}
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <Card className="border-red-100 bg-gradient-to-br from-red-50 to-rose-50 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-600 text-white">
-                                <Activity className="h-6 w-6" />
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+                    <Card className="border-red-100 bg-gradient-to-br from-red-50 to-rose-50 p-3 sm:p-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-600 text-white sm:h-12 sm:w-12">
+                                <Activity className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                             <div>
                                 <p className="text-xs font-medium text-gray-600">
                                     Blood Type
                                 </p>
-                                <p className="text-xl font-bold text-red-600">
+                                <p className="text-lg font-bold text-red-600 sm:text-xl">
                                     {medicalInfo.bloodType}
                                 </p>
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="border-amber-100 bg-gradient-to-br from-amber-50 to-yellow-50 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-600 text-white">
-                                <AlertCircle className="h-6 w-6" />
+                    <Card className="border-amber-100 bg-gradient-to-br from-amber-50 to-yellow-50 p-3 sm:p-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-600 text-white sm:h-12 sm:w-12">
+                                <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                             <div>
                                 <p className="text-xs font-medium text-gray-600">
@@ -291,10 +299,10 @@ export default function HealthRecords() {
                         </div>
                     </Card>
 
-                    <Card className="border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white">
-                                <Heart className="h-6 w-6" />
+                    <Card className="border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-3 sm:p-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white sm:h-12 sm:w-12">
+                                <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                             <div>
                                 <p className="text-xs font-medium text-gray-600">
@@ -308,16 +316,16 @@ export default function HealthRecords() {
                         </div>
                     </Card>
 
-                    <Card className="border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-600 text-white">
-                                <FileText className="h-6 w-6" />
+                    <Card className="border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 p-3 sm:p-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-600 text-white sm:h-12 sm:w-12">
+                                <FileText className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                             <div>
                                 <p className="text-xs font-medium text-gray-600">
                                     Total Records
                                 </p>
-                                <p className="text-xl font-bold text-green-600">
+                                <p className="text-lg font-bold text-green-600 sm:text-xl">
                                     {healthRecords.length}
                                 </p>
                             </div>
@@ -326,12 +334,39 @@ export default function HealthRecords() {
                 </div>
 
                 {/* Main Content */}
-                <div className="grid gap-6 lg:grid-cols-12">
+                <div className="relative grid gap-6 lg:grid-cols-12">
+                    {/* Overlay for mobile filter menu */}
+                    {isFilterOpen && (
+                        <div
+                            className="absolute inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+                            onClick={() => setIsFilterOpen(false)}
+                        ></div>
+                    )}
+
                     {/* Sidebar */}
-                    <div className="space-y-4 lg:col-span-3">
+                    <div
+                        className={`fixed inset-y-0 left-0 z-50 w-80 transform space-y-4 overflow-y-auto border-r border-gray-200 bg-white p-4 shadow-xl transition-transform duration-300 ease-in-out lg:relative lg:col-span-3 lg:z-auto lg:w-auto lg:translate-x-0 lg:shadow-none ${
+                            isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+                        }`}
+                    >
+                        {/* Mobile Header */}
+                        <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 lg:hidden">
+                            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                                <Filter className="h-5 w-5 text-green-600" />
+                                Categories & Info
+                            </h2>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setIsFilterOpen(false)}
+                            >
+                                <X className="h-5 w-5" />
+                            </Button>
+                        </div>
+
                         {/* Categories */}
-                        <Card className="p-4">
-                            <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-gray-900">
+                        <Card className="border-0 p-4 lg:border lg:shadow-sm">
+                            <h3 className="mb-4 hidden items-center gap-2 text-sm font-bold text-gray-900 lg:flex">
                                 <Filter className="h-4 w-4 text-green-600" />
                                 Categories
                             </h3>
@@ -340,7 +375,7 @@ export default function HealthRecords() {
                                     <button
                                         key={category.id}
                                         onClick={() =>
-                                            setSelectedCategory(category.id)
+                                            handleCategorySelect(category.id)
                                         }
                                         className={`flex w-full items-center justify-between rounded-lg p-3 text-left transition-all ${
                                             selectedCategory === category.id
@@ -362,6 +397,20 @@ export default function HealthRecords() {
                                     </button>
                                 ))}
                             </div>
+
+                            {/* Clear Filter Button - Mobile Only */}
+                            {selectedCategory !== 'all' && (
+                                <Button
+                                    onClick={() => {
+                                        setSelectedCategory('all');
+                                        setIsFilterOpen(false);
+                                    }}
+                                    variant="outline"
+                                    className="mt-4 w-full lg:hidden"
+                                >
+                                    Clear Category Filter
+                                </Button>
+                            )}
                         </Card>
 
                         {/* Medical Information */}
@@ -390,33 +439,37 @@ export default function HealthRecords() {
                                     <p className="mb-2 text-xs font-medium text-gray-600">
                                         Allergies
                                     </p>
-                                    {medicalInfo.allergies.map(
-                                        (allergy, idx) => (
-                                            <span
-                                                key={idx}
-                                                className="mr-1 mb-1 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700"
-                                            >
-                                                <AlertCircle className="h-3 w-3" />
-                                                {allergy}
-                                            </span>
-                                        ),
-                                    )}
+                                    <div className="flex flex-wrap gap-1">
+                                        {medicalInfo.allergies.map(
+                                            (allergy, idx) => (
+                                                <span
+                                                    key={idx}
+                                                    className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700"
+                                                >
+                                                    <AlertCircle className="h-3 w-3" />
+                                                    {allergy}
+                                                </span>
+                                            ),
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="rounded-lg bg-white p-3 shadow-sm">
                                     <p className="mb-2 text-xs font-medium text-gray-600">
                                         Chronic Conditions
                                     </p>
-                                    {medicalInfo.chronicConditions.map(
-                                        (condition, idx) => (
-                                            <span
-                                                key={idx}
-                                                className="mr-1 mb-1 inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700"
-                                            >
-                                                {condition}
-                                            </span>
-                                        ),
-                                    )}
+                                    <div className="flex flex-wrap gap-1">
+                                        {medicalInfo.chronicConditions.map(
+                                            (condition, idx) => (
+                                                <span
+                                                    key={idx}
+                                                    className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700"
+                                                >
+                                                    {condition}
+                                                </span>
+                                            ),
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="rounded-lg bg-white p-3 shadow-sm">
@@ -439,38 +492,86 @@ export default function HealthRecords() {
                     </div>
 
                     {/* Records List */}
-                    <div className="lg:col-span-9">
+                    <div className="relative z-10 lg:col-span-9">
                         <Card>
                             {/* Search and Actions */}
-                            <div className="border-b border-gray-200 bg-gray-50 p-4">
-                                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2">
-                                        <Search className="h-5 w-5 text-gray-400" />
+                            <div className="border-b border-gray-200 bg-gray-50 p-3 sm:p-4">
+                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-300 bg-white px-3 py-2 sm:px-4">
+                                        <Search className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
                                         <input
                                             type="text"
                                             value={searchQuery}
                                             onChange={(e) =>
                                                 setSearchQuery(e.target.value)
                                             }
-                                            placeholder="Search records by title, doctor, or tags..."
-                                            className="flex-1 border-none bg-transparent text-sm outline-none placeholder:text-gray-400"
+                                            placeholder="Search records..."
+                                            className="flex-1 border-none bg-transparent text-xs outline-none placeholder:text-gray-400 sm:text-sm"
                                         />
                                     </div>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm">
+                                        {/* Mobile Filter Button */}
+                                        <Button
+                                            onClick={() =>
+                                                setIsFilterOpen(!isFilterOpen)
+                                            }
+                                            variant="outline"
+                                            size="sm"
+                                            className="lg:hidden"
+                                        >
                                             <Filter className="mr-2 h-4 w-4" />
-                                            Filter
+                                            Categories
+                                            {selectedCategory !== 'all' && (
+                                                <span className="ml-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs text-white">
+                                                    1
+                                                </span>
+                                            )}
+                                        </Button>
+
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="hidden sm:flex"
+                                        >
+                                            <Filter className="mr-2 h-4 w-4" />
+                                            <span className="hidden sm:inline">
+                                                Filter
+                                            </span>
                                         </Button>
                                         <Button variant="outline" size="sm">
-                                            <Download className="mr-2 h-4 w-4" />
-                                            Export All
+                                            <Download className="mr-0 h-4 w-4 sm:mr-2" />
+                                            <span className="hidden sm:inline">
+                                                Export All
+                                            </span>
                                         </Button>
                                     </div>
                                 </div>
+
+                                {/* Active Filter Tag */}
+                                {selectedCategory !== 'all' && (
+                                    <div className="mt-3 flex items-center gap-2">
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                            {
+                                                categories.find(
+                                                    (c) =>
+                                                        c.id === selectedCategory,
+                                                )?.name
+                                            }
+                                            <button
+                                                onClick={() =>
+                                                    setSelectedCategory('all')
+                                                }
+                                                className="ml-1 hover:text-green-900"
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Records Grid */}
-                            <div className="grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 p-3 sm:grid-cols-2 sm:p-4 lg:grid-cols-2">
                                 {filteredRecords.map((record) => (
                                     <Card
                                         key={record.id}
@@ -478,7 +579,7 @@ export default function HealthRecords() {
                                     >
                                         {/* Record Header */}
                                         <div
-                                            className={`bg-gradient-to-r ${getCategoryColor(record.category)} p-4 text-white`}
+                                            className={`bg-gradient-to-r ${getCategoryColor(record.category)} p-3 text-white sm:p-4`}
                                         >
                                             <div className="mb-2 flex items-start justify-between">
                                                 {getFileIcon(record.fileType)}
@@ -495,10 +596,10 @@ export default function HealthRecords() {
                                         </div>
 
                                         {/* Record Details */}
-                                        <div className="p-4">
-                                            <div className="mb-3 space-y-2 text-sm">
+                                        <div className="p-3 sm:p-4">
+                                            <div className="mb-3 space-y-2 text-xs sm:text-sm">
                                                 <div className="flex items-center gap-2 text-gray-600">
-                                                    <Calendar className="h-4 w-4 text-green-600" />
+                                                    <Calendar className="h-3.5 w-3.5 text-green-600 sm:h-4 sm:w-4" />
                                                     {new Date(
                                                         record.date,
                                                     ).toLocaleDateString(
@@ -511,7 +612,7 @@ export default function HealthRecords() {
                                                     )}
                                                 </div>
                                                 <div className="flex items-center gap-2 text-gray-600">
-                                                    <User className="h-4 w-4 text-blue-600" />
+                                                    <User className="h-3.5 w-3.5 text-blue-600 sm:h-4 sm:w-4" />
                                                     {record.doctor}
                                                 </div>
                                                 <p className="text-xs text-gray-500">
@@ -568,8 +669,8 @@ export default function HealthRecords() {
 
                             {filteredRecords.length === 0 && (
                                 <div className="flex flex-col items-center justify-center py-12">
-                                    <ClipboardList className="h-16 w-16 text-gray-300" />
-                                    <p className="mt-4 text-lg font-semibold text-gray-900">
+                                    <ClipboardList className="h-12 w-12 text-gray-300 sm:h-16 sm:w-16" />
+                                    <p className="mt-4 text-base font-semibold text-gray-900 sm:text-lg">
                                         No records found
                                     </p>
                                     <p className="mt-2 text-sm text-gray-600">

@@ -22,6 +22,8 @@ import {
     Building2,
     Plus,
     BarChart3,
+    Menu,
+    X,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -49,6 +51,7 @@ export default function LabResults() {
     const { auth } = usePage<PageProps>().props;
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const labResults = [
         {
@@ -169,6 +172,11 @@ export default function LabResults() {
         r.results.some(result => result.status === 'high' || result.status === 'low')
     ).length;
 
+    const handleCategorySelect = (categoryId: string) => {
+        setSelectedCategory(categoryId);
+        setIsFilterOpen(false); // Close menu after selection on mobile
+    };
+
     const getStatusBadge = (status: string) => {
         if (status === 'completed') {
             return 'bg-green-100 text-green-700 border-green-200';
@@ -199,20 +207,20 @@ export default function LabResults() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Lab Results" />
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 sm:gap-6">
                 {/* Header Section */}
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-green-600 to-green-600 p-6 text-white shadow-xl sm:p-8">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-green-600 to-green-600 p-4 text-white shadow-xl sm:p-6 lg:p-8">
                     <div className="relative z-10">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm">
-                                    <FileText className="h-9 w-9" />
+                            <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm sm:h-16 sm:w-16">
+                                    <FileText className="h-6 w-6 sm:h-9 sm:w-9" />
                                 </div>
                                 <div>
-                                    <h1 className="text-3xl font-bold">
+                                    <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">
                                         Lab Results
                                     </h1>
-                                    <p className="mt-1 text-sm text-green-100">
+                                    <p className="mt-1 text-xs text-green-100 sm:text-sm">
                                         View and track your laboratory test results
                                     </p>
                                 </div>
@@ -232,166 +240,244 @@ export default function LabResults() {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <Card className="border-green-100 bg-gradient-to-br from-green-50 to-indigo-50 p-6">
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+                    <Card className="border-green-100 bg-gradient-to-br from-green-50 to-indigo-50 p-4 sm:p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">
+                                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                                     Total Tests
                                 </p>
-                                <p className="mt-2 text-3xl font-bold text-green-600">
+                                <p className="mt-1 text-2xl font-bold text-green-600 sm:mt-2 sm:text-3xl">
                                     {labResults.length}
                                 </p>
                             </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-600 text-white">
-                                <FileText className="h-6 w-6" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-600 text-white sm:h-12 sm:w-12">
+                                <FileText className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 p-6">
+                    <Card className="border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 p-4 sm:p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">
+                                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                                     Completed
                                 </p>
-                                <p className="mt-2 text-3xl font-bold text-green-600">
+                                <p className="mt-1 text-2xl font-bold text-green-600 sm:mt-2 sm:text-3xl">
                                     {completedTests}
                                 </p>
                             </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-600 text-white">
-                                <CheckCircle2 className="h-6 w-6" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-600 text-white sm:h-12 sm:w-12">
+                                <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="border-amber-100 bg-gradient-to-br from-amber-50 to-yellow-50 p-6">
+                    <Card className="border-amber-100 bg-gradient-to-br from-amber-50 to-yellow-50 p-4 sm:p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">
+                                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                                     Pending
                                 </p>
-                                <p className="mt-2 text-3xl font-bold text-amber-600">
+                                <p className="mt-1 text-2xl font-bold text-amber-600 sm:mt-2 sm:text-3xl">
                                     {pendingTests}
                                 </p>
                             </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-600 text-white">
-                                <Clock className="h-6 w-6" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-600 text-white sm:h-12 sm:w-12">
+                                <Clock className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="border-orange-100 bg-gradient-to-br from-orange-50 to-red-50 p-6">
+                    <Card className="border-orange-100 bg-gradient-to-br from-orange-50 to-red-50 p-4 sm:p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">
+                                <p className="text-xs font-medium text-gray-600 sm:text-sm">
                                     Needs Attention
                                 </p>
-                                <p className="mt-2 text-3xl font-bold text-orange-600">
+                                <p className="mt-1 text-2xl font-bold text-orange-600 sm:mt-2 sm:text-3xl">
                                     {abnormalResults}
                                 </p>
                             </div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-600 text-white">
-                                <AlertCircle className="h-6 w-6" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-600 text-white sm:h-12 sm:w-12">
+                                <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6" />
                             </div>
                         </div>
                     </Card>
                 </div>
 
                 {/* Main Content */}
-                <div className="grid gap-6 lg:grid-cols-12">
-                    {/* Sidebar - Categories */}
-                    <div className="lg:col-span-3">
-                        <Card className="p-4">
-                            <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-gray-900">
-                                <Filter className="h-4 w-4 text-green-600" />
-                                Test Categories
-                            </h3>
-                            <div className="space-y-2">
-                                {categories.map((category) => (
-                                    <button
-                                        key={category.id}
-                                        onClick={() => setSelectedCategory(category.id)}
-                                        className={`flex w-full items-center gap-3 rounded-lg p-3 text-left transition-all ${
-                                            selectedCategory === category.id
-                                                ? 'bg-gradient-to-r from-green-100 to-indigo-100 border-2 border-green-500 shadow-md'
-                                                : 'bg-gray-50 hover:bg-gray-100'
-                                        }`}
-                                    >
-                                        <span className="text-xl">{category.icon}</span>
-                                        <span className="text-sm font-medium text-gray-900">
-                                            {category.name}
-                                        </span>
-                                        {selectedCategory === category.id && (
-                                            <CheckCircle2 className="ml-auto h-4 w-4 text-green-600" />
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
-                        </Card>
+                <div className="relative grid gap-6 lg:grid-cols-12">
+                    {/* Overlay for mobile filter menu */}
+                    {isFilterOpen && (
+                        <div
+                            className="absolute inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+                            onClick={() => setIsFilterOpen(false)}
+                        ></div>
+                    )}
 
-                        {/* Recent Abnormal Results */}
-                        <Card className="mt-4 border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-red-50 p-4">
-                            <div className="mb-3 flex items-center gap-2">
-                                <AlertCircle className="h-5 w-5 text-orange-600" />
-                                <h3 className="text-sm font-bold text-gray-900">
-                                    Needs Attention
+                    {/* Sidebar - Categories */}
+                    <div
+                        className={`fixed inset-y-0 left-0 z-50 w-80 transform overflow-y-auto border-r border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:relative lg:col-span-3 lg:z-auto lg:w-auto lg:translate-x-0 lg:shadow-none ${
+                            isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+                        }`}
+                    >
+                        {/* Mobile Header */}
+                        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 lg:hidden">
+                            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                                <Filter className="h-5 w-5 text-green-600" />
+                                Test Categories
+                            </h2>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setIsFilterOpen(false)}
+                            >
+                                <X className="h-5 w-5" />
+                            </Button>
+                        </div>
+
+                        <div className="space-y-4 p-4">
+                            <Card className="border-0 p-4 lg:border lg:shadow-sm">
+                                <h3 className="mb-4 hidden items-center gap-2 text-sm font-bold text-gray-900 lg:flex">
+                                    <Filter className="h-4 w-4 text-green-600" />
+                                    Test Categories
                                 </h3>
-                            </div>
-                            {labResults
-                                .filter(r => r.results.some(result => result.status === 'high' || result.status === 'low'))
-                                .slice(0, 2)
-                                .map(result => (
-                                    <div key={result.id} className="mb-3 rounded-xl bg-white p-4 shadow-sm">
-                                        <p className="font-semibold text-gray-900">
-                                            {result.testName}
-                                        </p>
-                                        <p className="mt-1 text-xs text-gray-600">
-                                            {result.summary}
-                                        </p>
-                                        <Button size="sm" className="mt-3 w-full bg-orange-600 hover:bg-orange-700">
-                                            View Details
-                                        </Button>
-                                    </div>
-                                ))}
-                            {abnormalResults === 0 && (
-                                <div className="rounded-xl bg-white p-4 text-center">
-                                    <CheckCircle2 className="mx-auto h-8 w-8 text-green-600" />
-                                    <p className="mt-2 text-sm text-gray-600">
-                                        All results within normal range
-                                    </p>
+                                <div className="space-y-2">
+                                    {categories.map((category) => (
+                                        <button
+                                            key={category.id}
+                                            onClick={() => handleCategorySelect(category.id)}
+                                            className={`flex w-full items-center gap-3 rounded-lg p-3 text-left transition-all ${
+                                                selectedCategory === category.id
+                                                    ? 'border-2 border-green-500 bg-gradient-to-r from-green-100 to-indigo-100 shadow-md'
+                                                    : 'bg-gray-50 hover:bg-gray-100'
+                                            }`}
+                                        >
+                                            <span className="text-xl">{category.icon}</span>
+                                            <span className="text-sm font-medium text-gray-900">
+                                                {category.name}
+                                            </span>
+                                            {selectedCategory === category.id && (
+                                                <CheckCircle2 className="ml-auto h-4 w-4 text-green-600" />
+                                            )}
+                                        </button>
+                                    ))}
                                 </div>
-                            )}
-                        </Card>
+
+                                {/* Clear Filter Button - Mobile Only */}
+                                {selectedCategory !== 'all' && (
+                                    <Button
+                                        onClick={() => {
+                                            setSelectedCategory('all');
+                                            setIsFilterOpen(false);
+                                        }}
+                                        variant="outline"
+                                        className="mt-4 w-full lg:hidden"
+                                    >
+                                        Clear Category Filter
+                                    </Button>
+                                )}
+                            </Card>
+
+                            {/* Recent Abnormal Results */}
+                            <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-red-50 p-4">
+                                <div className="mb-3 flex items-center gap-2">
+                                    <AlertCircle className="h-5 w-5 text-orange-600" />
+                                    <h3 className="text-sm font-bold text-gray-900">
+                                        Needs Attention
+                                    </h3>
+                                </div>
+                                {labResults
+                                    .filter(r => r.results.some(result => result.status === 'high' || result.status === 'low'))
+                                    .slice(0, 2)
+                                    .map(result => (
+                                        <div key={result.id} className="mb-3 rounded-xl bg-white p-4 shadow-sm last:mb-0">
+                                            <p className="font-semibold text-gray-900">
+                                                {result.testName}
+                                            </p>
+                                            <p className="mt-1 text-xs text-gray-600">
+                                                {result.summary}
+                                            </p>
+                                            <Button 
+                                                size="sm" 
+                                                className="mt-3 w-full bg-orange-600 hover:bg-orange-700"
+                                                onClick={() => setIsFilterOpen(false)}
+                                            >
+                                                View Details
+                                            </Button>
+                                        </div>
+                                    ))}
+                                {abnormalResults === 0 && (
+                                    <div className="rounded-xl bg-white p-4 text-center">
+                                        <CheckCircle2 className="mx-auto h-8 w-8 text-green-600" />
+                                        <p className="mt-2 text-sm text-gray-600">
+                                            All results within normal range
+                                        </p>
+                                    </div>
+                                )}
+                            </Card>
+                        </div>
                     </div>
 
                     {/* Results List */}
-                    <div className="lg:col-span-9">
+                    <div className="relative z-10 lg:col-span-9">
                         <Card>
                             {/* Search Bar */}
-                            <div className="border-b border-gray-200 bg-gray-50 p-4">
-                                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2">
-                                        <Search className="h-5 w-5 text-gray-400" />
+                            <div className="border-b border-gray-200 bg-gray-50 p-3 sm:p-4">
+                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-300 bg-white px-3 py-2 sm:px-4">
+                                        <Search className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
                                         <input
                                             type="text"
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             placeholder="Search lab results..."
-                                            className="flex-1 border-none bg-transparent text-sm outline-none placeholder:text-gray-400"
+                                            className="flex-1 border-none bg-transparent text-xs outline-none placeholder:text-gray-400 sm:text-sm"
                                         />
                                     </div>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm">
+                                        {/* Mobile Filter Button */}
+                                        <Button
+                                            onClick={() => setIsFilterOpen(!isFilterOpen)}
+                                            variant="outline"
+                                            size="sm"
+                                            className="lg:hidden"
+                                        >
                                             <Filter className="mr-2 h-4 w-4" />
-                                            Filter
+                                            Categories
+                                            {selectedCategory !== 'all' && (
+                                                <span className="ml-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs text-white">
+                                                    1
+                                                </span>
+                                            )}
+                                        </Button>
+
+                                        <Button variant="outline" size="sm" className="hidden sm:flex">
+                                            <Filter className="mr-2 h-4 w-4" />
+                                            <span className="hidden sm:inline">Filter</span>
                                         </Button>
                                         <Button variant="outline" size="sm">
                                             <Download className="mr-2 h-4 w-4" />
-                                            Export All
+                                            <span className="hidden sm:inline">Export All</span>
                                         </Button>
                                     </div>
                                 </div>
+
+                                {/* Active Filter Tag */}
+                                {selectedCategory !== 'all' && (
+                                    <div className="mt-3 flex items-center gap-2">
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                            {categories.find(c => c.id === selectedCategory)?.name}
+                                            <button
+                                                onClick={() => setSelectedCategory('all')}
+                                                className="ml-1 hover:text-green-900"
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Results List */}
@@ -399,21 +485,21 @@ export default function LabResults() {
                                 {filteredResults.map((result) => (
                                     <div
                                         key={result.id}
-                                        className="p-6 transition-all hover:bg-gray-50"
+                                        className="p-4 transition-all hover:bg-gray-50 sm:p-6"
                                     >
-                                        <div className="mb-4 flex items-start justify-between">
+                                        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                             <div>
-                                                <div className="flex items-center gap-2">
-                                                    <h3 className="text-lg font-bold text-gray-900">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <h3 className="text-base font-bold text-gray-900 sm:text-lg">
                                                         {result.testName}
                                                     </h3>
                                                     <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-700">
                                                         {result.category}
                                                     </span>
                                                 </div>
-                                                <div className="mt-2 flex flex-wrap gap-3 text-sm text-gray-600">
+                                                <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600 sm:gap-3 sm:text-sm">
                                                     <span className="flex items-center gap-1">
-                                                        <Calendar className="h-4 w-4 text-green-600" />
+                                                        <Calendar className="h-3.5 w-3.5 text-green-600 sm:h-4 sm:w-4" />
                                                         {new Date(result.date).toLocaleDateString('en-US', {
                                                             month: 'short',
                                                             day: 'numeric',
@@ -421,17 +507,18 @@ export default function LabResults() {
                                                         })}
                                                     </span>
                                                     <span className="flex items-center gap-1">
-                                                        <User className="h-4 w-4 text-green-600" />
-                                                        {result.orderedBy}
+                                                        <User className="h-3.5 w-3.5 text-green-600 sm:h-4 sm:w-4" />
+                                                        <span className="hidden sm:inline">{result.orderedBy}</span>
+                                                        <span className="sm:hidden">{result.orderedBy.split(' ')[1]}</span>
                                                     </span>
                                                     <span className="flex items-center gap-1">
-                                                        <Building2 className="h-4 w-4 text-purple-600" />
+                                                        <Building2 className="h-3.5 w-3.5 text-purple-600 sm:h-4 sm:w-4" />
                                                         {result.facility}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div
-                                                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${getStatusBadge(
+                                                className={`flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold sm:px-3 ${getStatusBadge(
                                                     result.status
                                                 )}`}
                                             >
@@ -446,7 +533,7 @@ export default function LabResults() {
 
                                         {/* Summary */}
                                         <div className="mb-4 rounded-lg bg-green-50 p-3">
-                                            <p className="text-sm font-semibold text-green-900">
+                                            <p className="text-xs font-semibold text-green-900 sm:text-sm">
                                                 Summary: {result.summary}
                                             </p>
                                             {result.notes && (
@@ -459,19 +546,19 @@ export default function LabResults() {
                                         {/* Results Table */}
                                         {result.results.length > 0 && (
                                             <div className="mb-4 overflow-x-auto">
-                                                <table className="w-full text-sm">
+                                                <table className="w-full text-xs sm:text-sm">
                                                     <thead className="bg-gray-50">
                                                         <tr>
-                                                            <th className="px-4 py-2 text-left font-semibold text-gray-900">
+                                                            <th className="px-2 py-2 text-left font-semibold text-gray-900 sm:px-4">
                                                                 Parameter
                                                             </th>
-                                                            <th className="px-4 py-2 text-center font-semibold text-gray-900">
+                                                            <th className="px-2 py-2 text-center font-semibold text-gray-900 sm:px-4">
                                                                 Value
                                                             </th>
-                                                            <th className="px-4 py-2 text-center font-semibold text-gray-900">
+                                                            <th className="hidden px-4 py-2 text-center font-semibold text-gray-900 sm:table-cell">
                                                                 Reference Range
                                                             </th>
-                                                            <th className="px-4 py-2 text-center font-semibold text-gray-900">
+                                                            <th className="px-2 py-2 text-center font-semibold text-gray-900 sm:px-4">
                                                                 Status
                                                             </th>
                                                         </tr>
@@ -481,10 +568,10 @@ export default function LabResults() {
                                                             const statusInfo = getResultStatus(item.status);
                                                             return (
                                                                 <tr key={idx} className={statusInfo.bg}>
-                                                                    <td className="px-4 py-3 font-medium text-gray-900">
+                                                                    <td className="px-2 py-2 font-medium text-gray-900 sm:px-4 sm:py-3">
                                                                         {item.parameter}
                                                                     </td>
-                                                                    <td className="px-4 py-3 text-center">
+                                                                    <td className="px-2 py-2 text-center sm:px-4 sm:py-3">
                                                                         <div className="flex items-center justify-center gap-1">
                                                                             <span className="font-semibold text-gray-900">
                                                                                 {item.value}
@@ -495,13 +582,13 @@ export default function LabResults() {
                                                                             {getTrendIcon(item.status)}
                                                                         </div>
                                                                     </td>
-                                                                    <td className="px-4 py-3 text-center text-gray-600">
+                                                                    <td className="hidden px-4 py-3 text-center text-gray-600 sm:table-cell">
                                                                         {item.range}
                                                                     </td>
-                                                                    <td className="px-4 py-3 text-center">
+                                                                    <td className="px-2 py-2 text-center sm:px-4 sm:py-3">
                                                                         <div className={`flex items-center justify-center gap-1 ${statusInfo.color}`}>
                                                                             {statusInfo.icon}
-                                                                            <span className="text-xs font-semibold uppercase">
+                                                                            <span className="hidden text-xs font-semibold uppercase sm:inline">
                                                                                 {item.status}
                                                                             </span>
                                                                         </div>
@@ -516,19 +603,19 @@ export default function LabResults() {
 
                                         {/* Action Buttons */}
                                         <div className="flex flex-wrap gap-2">
-                                            <Button size="sm" variant="outline">
-                                                <Eye className="mr-2 h-4 w-4" />
-                                                View Full Report
+                                            <Button size="sm" variant="outline" className="flex-1 sm:flex-initial">
+                                                <Eye className="mr-0 h-4 w-4 sm:mr-2" />
+                                                <span className="hidden sm:inline">View Full Report</span>
                                             </Button>
-                                            <Button size="sm" variant="outline">
-                                                <Download className="mr-2 h-4 w-4" />
-                                                Download PDF
+                                            <Button size="sm" variant="outline" className="flex-1 sm:flex-initial">
+                                                <Download className="mr-0 h-4 w-4 sm:mr-2" />
+                                                <span className="hidden sm:inline">Download PDF</span>
                                             </Button>
-                                            <Button size="sm" variant="outline">
+                                            <Button size="sm" variant="outline" className="hidden sm:flex">
                                                 <Share2 className="mr-2 h-4 w-4" />
                                                 Share with Doctor
                                             </Button>
-                                            <Button size="sm" variant="outline">
+                                            <Button size="sm" variant="outline" className="hidden sm:flex">
                                                 <BarChart3 className="mr-2 h-4 w-4" />
                                                 View Trends
                                             </Button>
@@ -539,8 +626,8 @@ export default function LabResults() {
 
                             {filteredResults.length === 0 && (
                                 <div className="flex flex-col items-center justify-center py-12">
-                                    <FileText className="h-16 w-16 text-gray-300" />
-                                    <p className="mt-4 text-lg font-semibold text-gray-900">
+                                    <FileText className="h-12 w-12 text-gray-300 sm:h-16 sm:w-16" />
+                                    <p className="mt-4 text-base font-semibold text-gray-900 sm:text-lg">
                                         No lab results found
                                     </p>
                                     <p className="mt-2 text-sm text-gray-600">

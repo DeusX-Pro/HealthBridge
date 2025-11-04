@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Middleware\RoleMiddleware;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\RoleMiddleware;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    $user = Auth::user();
+    return Inertia::render('welcome', compact('user'));
 })->name('home');
 
 Route::middleware(['auth', 'verified', RoleMiddleware::class])->group(function () {

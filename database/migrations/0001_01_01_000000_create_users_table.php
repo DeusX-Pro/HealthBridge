@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->date('date_of_birth')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'patient', 'doctor'])->default('patient');
             $table->string('profile_picture')->nullable();
@@ -26,8 +27,17 @@ return new class extends Migration
             $table->enum('status', ['active', 'pending', 'inactive'])->default('active');
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->string('bio')->nullable();
+            $table->enum('maritial_status', ['single', 'married', 'divorced', 'widowed', 'seperated'])->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            //BLOCKCHAIN & DATA SECURITY
+            // $table->string('blockchain_wallet_address')->nullable();
+            // $table->string('encrypted_medical_data_hash')->nullable();
+            // $table->string('public_encryption_key')->nullable();
+            // $table->boolean('consent_to_share_data')->default(false);
+            // $table->string('last_sync_hash')->nullable();
+
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
