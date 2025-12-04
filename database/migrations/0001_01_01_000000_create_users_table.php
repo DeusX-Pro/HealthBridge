@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'patient', 'doctor'])->default('patient');
+            $table->enum('role', ['admin', 'patient', 'doctor', 'pharmacy', 'medlab'])->default('patient');
             $table->string('profile_picture')->nullable();
             $table->string('country')->nullable();
             $table->enum('status', ['active', 'pending', 'inactive'])->default('active');
