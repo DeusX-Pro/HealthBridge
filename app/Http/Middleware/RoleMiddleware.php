@@ -25,6 +25,10 @@ class RoleMiddleware
                 return redirect()->route('doctor.dashboard');
             } elseif ($user->role === 'patient') {
                 return redirect()->route('patient.dashboard');
+            } elseif ($user->role === 'pharmacy') {
+                return redirect()->route('pharmacy.dashboard');
+            } elseif ($user->role === 'medical_lab') {
+                return redirect()->route('medical-lab.dashboard');
             } else {
                 return redirect()->back();
             }

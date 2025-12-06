@@ -41,6 +41,14 @@ Route::middleware('guest')->group(function () {
     })->name('doctor-register');
 
     Route::post('doctor/register', [App\Http\Controllers\Doctor\ProfileController::class, 'store'])->name('doctor.profile.store');
+
+    // Pharmacy Auth Routes
+    Route::get('/pharmacy-register', [App\Http\Controllers\Pharmacy\ProfileController::class, 'create'])->name('pharmacy-register');
+    Route::post('pharmacy/register', [App\Http\Controllers\Pharmacy\ProfileController::class, 'store'])->name('pharmacy.profile.store');
+
+    // Medical Lab Auth Routes
+    Route::get('/medical-lab-register', [App\Http\Controllers\MedicalLab\ProfileController::class, 'create'])->name('medical-lab-register');
+    Route::post('medical-lab/register', [App\Http\Controllers\MedicalLab\ProfileController::class, 'store'])->name('medicallab.profile.store');
 });
 
 Route::middleware('auth')->group(function () {
