@@ -123,7 +123,6 @@ class ProfileController extends Controller
                     $documents[$field] = $request->file($field)->store('pharmacy_documents', 'public');
                 }
             }
-
             // Create the pharmacy profile
             $pharmacy = Pharmacy::create([
                 'user_id' => $user->id,
@@ -178,4 +177,5 @@ class ProfileController extends Controller
         }
     }
 }
+
 

@@ -61,8 +61,14 @@ require __DIR__ . '/patient/wallet.php';
 
 // Pharmacy Route Starts
 require __DIR__ . '/pharmacy/dashboard.php';
+require __DIR__ . '/pharmacy/inventory.php';
+require __DIR__ . '/pharmacy/orders.php';
+require __DIR__ . '/pharmacy/prescription-requests.php';
 // Pharmacy Route Ends
 
 // Medical Lab Route Starts
 require __DIR__ . '/medical-lab/dashboard.php';
+require __DIR__ . '/medical-lab/services.php';
+require __DIR__ . '/medical-lab/orders.php';
+require __DIR__ . '/medical-lab/upload-results.php';
 // Medical Lab Route Ends
