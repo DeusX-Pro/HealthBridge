@@ -20,6 +20,20 @@ use Illuminate\Auth\Events\Registered;
 class ProfileController extends Controller
 {
     /**
+     * Show the medical lab profile page.
+     */
+    public function index(): Response
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->load('medicallab');
+
+        return Inertia::render('dashboard/medical-lab/profile/index', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * Show the medical lab registration page.
      */
     public function create(): Response

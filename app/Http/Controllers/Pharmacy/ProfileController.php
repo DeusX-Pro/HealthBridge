@@ -20,6 +20,20 @@ use Illuminate\Auth\Events\Registered;
 class ProfileController extends Controller
 {
     /**
+     * Show the pharmacy profile page.
+     */
+    public function index(): Response
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->load('pharmacy');
+
+        return Inertia::render('dashboard/pharmacy/profile/index', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * Show the pharmacy registration page.
      */
     public function create(): Response
