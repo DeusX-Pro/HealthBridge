@@ -31,5 +31,10 @@ class DatabaseSeeder extends Seeder
             MedicineBrandSeeder::class,
             MedicineSeeder::class,
         ]);
+
+        // Seed medical lab services (depends on medical labs)
+        $this->call([
+            MedicalLabServiceSeeder::class,
+        ]);
     }
 }
