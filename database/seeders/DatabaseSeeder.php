@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Database\Seeders\Pharmacy\MedicineBrandSeeder;
+use Database\Seeders\Pharmacy\MedicineCategorySeeder;
+use Database\Seeders\Pharmacy\MedicineSeeder;
+use Database\Seeders\Pharmacy\MedicineSubcategorySeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,15 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed users first
+        $this->call([
+            PatientSeeder::class,
+            DoctorSeeder::class,
+            PharmacySeeder::class,
+            MedicallabSeeder::class,
+        ]);
 
-        User::firstOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-            ]
-        );
+        // Seed pharmacy-related data (depends on pharmacies)
+        $this->call([
+            MedicineCategorySeeder::class,
+            MedicineSubcategorySeeder::class,
+            MedicineBrandSeeder::class,
+            MedicineSeeder::class,
+        ]);
     }
 }

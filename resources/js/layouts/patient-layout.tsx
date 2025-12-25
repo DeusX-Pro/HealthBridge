@@ -62,7 +62,7 @@ const navigationItems = [
     // { name: 'Vitals Tracking', href: '/patient/vitals-tracking', icon: Activity },
     // { name: 'Telemedicine', href: '/patient/telemedicine', icon: Video },
     { name: 'Pharmacies', href: '/patient/pharmacies', icon: Store },
-    // { name: 'Messages', href: '/patient/messages', icon: MessageSquare },
+    { name: 'Messages', href: '/patient/messages', icon: MessageSquare },
     { name: 'Wallet', href: '/patient/wallet', icon: Wallet },
     // { name: 'Emergency', href: '/patient/emergency', icon: Phone },
     { name: 'Profile', href: '/patient/profile', icon: User },

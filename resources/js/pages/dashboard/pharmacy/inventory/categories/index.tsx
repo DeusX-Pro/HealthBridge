@@ -1,26 +1,15 @@
 import PharmacyLayout from '@/layouts/pharmacy-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 import {
     Package,
     Plus,
     Edit,
     Trash2,
     Search,
-    ChevronRight,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -30,67 +19,32 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Categories' },
 ];
 
-export default function CategoriesPage() {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState<any>(null);
+interface Category {
+    id: number;
+    name: string;
+    description?: string;
+    status: string;
+    created_at: string;
+}
+
+interface Props {
+    categories?: Category[];
+}
+
+export default function CategoriesPage({ categories = [] }: Props) {
     const [searchTerm, setSearchTerm] = useState('');
-
-    // Dummy data
-    const [categories, setCategories] = useState([
-        { id: 1, name: 'Pain Relief', description: 'Medications for pain management', createdAt: '2024-01-15' },
-        { id: 2, name: 'Antibiotics', description: 'Antibacterial medications', createdAt: '2024-01-15' },
-        { id: 3, name: 'Vitamins & Supplements', description: 'Nutritional supplements', createdAt: '2024-01-15' },
-        { id: 4, name: 'Cardiovascular', description: 'Heart and blood pressure medications', createdAt: '2024-01-15' },
-        { id: 5, name: 'Respiratory', description: 'Asthma and respiratory medications', createdAt: '2024-01-15' },
-    ]);
-
-    const { data, setData, post, processing, reset } = useForm({
-        name: '',
-        description: '',
-    });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (editingCategory) {
-            // Update category
-            setCategories(categories.map(cat => 
-                cat.id === editingCategory.id 
-                    ? { ...cat, name: data.name, description: data.description }
-                    : cat
-            ));
-        } else {
-            // Create new category
-            const newCategory = {
-                id: categories.length + 1,
-                name: data.name,
-                description: data.description,
-                createdAt: new Date().toISOString().split('T')[0],
-            };
-            setCategories([...categories, newCategory]);
-        }
-        reset();
-        setEditingCategory(null);
-        setIsDialogOpen(false);
-    };
-
-    const handleEdit = (category: any) => {
-        setEditingCategory(category);
-        setData({
-            name: category.name,
-            description: category.description,
-        });
-        setIsDialogOpen(true);
-    };
 
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this category?')) {
-            setCategories(categories.filter(cat => cat.id !== id));
+            router.delete(`/pharmacy/inventory/categories/${id}`, {
+                preserveScroll: true,
+            });
         }
     };
 
     const filteredCategories = categories.filter(cat =>
         cat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        cat.description.toLowerCase().includes(searchTerm.toLowerCase())
+        (cat.description && cat.description.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     return (
@@ -106,68 +60,12 @@ export default function CategoriesPage() {
                             Manage medicine categories for your inventory
                         </p>
                     </div>
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                            <Button className="bg-purple-600 hover:bg-purple-700">
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add Category
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>
-                                    {editingCategory ? 'Edit Category' : 'Add New Category'}
-                                </DialogTitle>
-                                <DialogDescription>
-                                    {editingCategory 
-                                        ? 'Update the category information below.'
-                                        : 'Create a new medicine category for your inventory.'
-                                    }
-                                </DialogDescription>
-                            </DialogHeader>
-                            <form onSubmit={handleSubmit}>
-                                <div className="space-y-4 py-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name">Category Name</Label>
-                                        <Input
-                                            id="name"
-                                            value={data.name}
-                                            onChange={(e) => setData('name', e.target.value)}
-                                            placeholder="e.g., Pain Relief"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="description">Description</Label>
-                                        <textarea
-                                            id="description"
-                                            value={data.description}
-                                            onChange={(e) => setData('description', e.target.value)}
-                                            placeholder="Brief description of the category"
-                                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-                                            rows={3}
-                                        />
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => {
-                                            setIsDialogOpen(false);
-                                            reset();
-                                            setEditingCategory(null);
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button type="submit" disabled={processing} className="bg-purple-600 hover:bg-purple-700">
-                                        {editingCategory ? 'Update' : 'Create'} Category
-                                    </Button>
-                                </DialogFooter>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
+                    <Link href="/pharmacy/inventory/categories/create">
+                        <Button className="bg-purple-600 hover:bg-purple-700">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add Category
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Search */}
@@ -183,53 +81,93 @@ export default function CategoriesPage() {
                     </div>
                 </Card>
 
-                {/* Categories Grid */}
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {filteredCategories.map((category) => (
-                        <Card key={category.id} className="p-6 hover:shadow-md transition-shadow">
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100">
-                                        <Package className="h-6 w-6 text-purple-600" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                                        <p className="text-xs text-gray-500">Created {category.createdAt}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-4">{category.description}</p>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleEdit(category)}
-                                    className="flex-1"
-                                >
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Edit
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleDelete(category.id)}
-                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </Card>
-                    ))}
-                </div>
-
-                {filteredCategories.length === 0 && (
-                    <Card className="p-12 text-center">
-                        <Package className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="mt-4 text-sm text-gray-600">
-                            No categories found matching your search.
-                        </p>
-                    </Card>
-                )}
+                {/* Categories Table */}
+                <Card>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Name
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Description
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Created
+                                    </th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {filteredCategories.map((category) => (
+                                    <tr key={category.id} className="hover:bg-gray-50">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 mr-3">
+                                                    <Package className="h-5 w-5 text-purple-600" />
+                                                </div>
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {category.name}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm text-gray-600 max-w-md truncate">
+                                                {category.description || '—'}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-2 py-1 text-xs rounded-full ${
+                                                category.status === 'active' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : 'bg-gray-100 text-gray-800'
+                                            }`}>
+                                                {category.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {new Date(category.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Link href={`/pharmacy/inventory/categories/${category.id}/edit`}>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                    >
+                                                        <Edit className="h-4 w-4" />
+                                                    </Button>
+                                                </Link>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleDelete(category.id)}
+                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {filteredCategories.length === 0 && (
+                        <div className="p-12 text-center">
+                            <Package className="mx-auto h-12 w-12 text-gray-400" />
+                            <p className="mt-4 text-sm text-gray-600">
+                                No categories found matching your search.
+                            </p>
+                        </div>
+                    )}
+                </Card>
             </div>
         </PharmacyLayout>
     );

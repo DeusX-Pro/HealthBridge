@@ -45,13 +45,13 @@ interface PageProps {
 
 const navigationItems = [
     { name: 'Dashboard', href: '/pharmacy/dashboard', icon: LayoutDashboard },
-    { name: 'Inventory', href: '/pharmacy/inventory', icon: Warehouse },
+    { name: 'Prescription Requests', href: '/pharmacy/prescription-requests', icon: ClipboardList },
+    // { name: 'Inventory', href: '/pharmacy/inventory', icon: Warehouse },
     { name: 'Categories', href: '/pharmacy/inventory/categories', icon: Package },
     { name: 'Subcategories', href: '/pharmacy/inventory/subcategories', icon: Package },
     { name: 'Brands', href: '/pharmacy/inventory/brands', icon: Package },
     { name: 'Medicines', href: '/pharmacy/inventory/medicines', icon: Pill },
     { name: 'Orders', href: '/pharmacy/orders', icon: ShoppingCart },
-    { name: 'Prescription Requests', href: '/pharmacy/prescription-requests', icon: ClipboardList },
     { name: 'Profile', href: '/pharmacy/profile', icon: User },
     { name: 'Settings', href: '/pharmacy/settings', icon: Settings },
 ];

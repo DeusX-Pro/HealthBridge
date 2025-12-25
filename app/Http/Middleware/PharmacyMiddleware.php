@@ -15,10 +15,20 @@ class PharmacyMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && ($request->user()->role === 'pharmacy')) {
-            return $next($request);
+        $user = $request->user();
+        
+        if (!$user || $user->role !== 'pharmacy') {
+            return redirect()->route('dashboard')->with('error', 'You do not have permission to access this page.');
         }
 
-        return redirect()->route('dashboard')->with('error', 'You do not have permission to access this page.');
+        // Check if pharmacy profile exists
+        if (!$user->pharmacy) {
+            // Allow access to profile page to complete setup
+            if (!$request->routeIs('pharmacy.profile')) {
+                return redirect()->route('pharmacy.profile')->with('error', 'Please complete your pharmacy profile setup first.');
+            }
+        }
+
+        return $next($request);
     }
 }
