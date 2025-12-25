@@ -4,6 +4,7 @@ import { Head, router, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import {
     Pill,
     Plus,
@@ -64,12 +65,20 @@ interface Props {
 
 export default function MedicinesPage({ medicines = [] }: Props) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [medicineToDelete, setMedicineToDelete] = useState<number | null>(null);
 
-    const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this medicine?')) {
-            router.delete(`/pharmacy/inventory/medicines/${id}`, {
+    const handleDeleteClick = (id: number) => {
+        setMedicineToDelete(id);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (medicineToDelete) {
+            router.delete(`/pharmacy/inventory/medicines/${medicineToDelete}`, {
                 preserveScroll: true,
             });
+            setMedicineToDelete(null);
         }
     };
 
@@ -234,7 +243,7 @@ export default function MedicinesPage({ medicines = [] }: Props) {
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        onClick={() => handleDelete(medicine.id)}
+                                                        onClick={() => handleDeleteClick(medicine.id)}
                                                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
@@ -256,6 +265,17 @@ export default function MedicinesPage({ medicines = [] }: Props) {
                         </div>
                     )}
                 </Card>
+
+                <ConfirmationDialog
+                    open={deleteDialogOpen}
+                    onOpenChange={setDeleteDialogOpen}
+                    title="Delete Medicine"
+                    description="Are you sure you want to delete this medicine? This action cannot be undone."
+                    confirmText="Delete"
+                    cancelText="Cancel"
+                    onConfirm={handleDeleteConfirm}
+                    variant="destructive"
+                />
             </div>
         </PharmacyLayout>
     );

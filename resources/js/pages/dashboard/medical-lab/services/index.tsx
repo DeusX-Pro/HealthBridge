@@ -4,6 +4,7 @@ import { Head, router, Link, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import {
     Microscope,
     Plus,
@@ -44,12 +45,20 @@ interface PageProps {
 export default function ServicesPage() {
     const { services = [] } = usePage<PageProps>().props;
     const [searchTerm, setSearchTerm] = useState('');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [serviceToDelete, setServiceToDelete] = useState<number | null>(null);
 
-    const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this service?')) {
-            router.delete(`/medical-lab/services/${id}`, {
+    const handleDeleteClick = (id: number) => {
+        setServiceToDelete(id);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (serviceToDelete) {
+            router.delete(`/medical-lab/services/${serviceToDelete}`, {
                 preserveScroll: true,
             });
+            setServiceToDelete(null);
         }
     };
 
@@ -178,7 +187,7 @@ export default function ServicesPage() {
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => handleDelete(service.id)}
+                                                    onClick={() => handleDeleteClick(service.id)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="h-4 w-4" />
@@ -199,6 +208,17 @@ export default function ServicesPage() {
                         </div>
                     )}
                 </Card>
+
+                <ConfirmationDialog
+                    open={deleteDialogOpen}
+                    onOpenChange={setDeleteDialogOpen}
+                    title="Delete Service"
+                    description="Are you sure you want to delete this service? This action cannot be undone."
+                    confirmText="Delete"
+                    cancelText="Cancel"
+                    onConfirm={handleDeleteConfirm}
+                    variant="destructive"
+                />
             </div>
         </MedicalLabLayout>
     );

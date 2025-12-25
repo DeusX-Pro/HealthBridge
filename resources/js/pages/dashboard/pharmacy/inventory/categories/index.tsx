@@ -4,6 +4,7 @@ import { Head, router, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import {
     Package,
     Plus,
@@ -33,12 +34,20 @@ interface Props {
 
 export default function CategoriesPage({ categories = [] }: Props) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null);
 
-    const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this category?')) {
-            router.delete(`/pharmacy/inventory/categories/${id}`, {
+    const handleDeleteClick = (id: number) => {
+        setCategoryToDelete(id);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (categoryToDelete) {
+            router.delete(`/pharmacy/inventory/categories/${categoryToDelete}`, {
                 preserveScroll: true,
             });
+            setCategoryToDelete(null);
         }
     };
 
@@ -147,7 +156,7 @@ export default function CategoriesPage({ categories = [] }: Props) {
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => handleDelete(category.id)}
+                                                    onClick={() => handleDeleteClick(category.id)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="h-4 w-4" />
@@ -168,6 +177,17 @@ export default function CategoriesPage({ categories = [] }: Props) {
                         </div>
                     )}
                 </Card>
+
+                <ConfirmationDialog
+                    open={deleteDialogOpen}
+                    onOpenChange={setDeleteDialogOpen}
+                    title="Delete Category"
+                    description="Are you sure you want to delete this category? This action cannot be undone."
+                    confirmText="Delete"
+                    cancelText="Cancel"
+                    onConfirm={handleDeleteConfirm}
+                    variant="destructive"
+                />
             </div>
         </PharmacyLayout>
     );
