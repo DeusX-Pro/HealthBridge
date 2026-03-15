@@ -6,7 +6,6 @@ use Database\Seeders\Pharmacy\MedicineBrandSeeder;
 use Database\Seeders\Pharmacy\MedicineCategorySeeder;
 use Database\Seeders\Pharmacy\MedicineSeeder;
 use Database\Seeders\Pharmacy\MedicineSubcategorySeeder;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,15 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seed users first
+        // 1. Core Users and Profiles
         $this->call([
+            UserSeeder::class,
             PatientSeeder::class,
             DoctorSeeder::class,
-            PharmacySeeder::class,
             MedicallabSeeder::class,
+            PharmacySeeder::class,
         ]);
 
-        // Seed pharmacy-related data (depends on pharmacies)
+        // 2. Pharmacy Infrastructure (Medicines, etc.)
         $this->call([
             MedicineCategorySeeder::class,
             MedicineSubcategorySeeder::class,
@@ -32,9 +32,18 @@ class DatabaseSeeder extends Seeder
             MedicineSeeder::class,
         ]);
 
-        // Seed medical lab services (depends on medical labs)
+        // 3. Medical Lab Infrastructure (Services)
         $this->call([
             MedicalLabServiceSeeder::class,
+        ]);
+
+        // 4. Transactional Data (Appointments, Vitals, prescriptions, Orders)
+        $this->call([
+            AppointmentSeeder::class,
+            VitalSeeder::class,
+            PrescriptionSeeder::class,
+            PharmacyOrderSeeder::class,
+            WalletTransactionSeeder::class,
         ]);
     }
 }

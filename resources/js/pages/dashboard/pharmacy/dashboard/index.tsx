@@ -25,6 +25,7 @@ import {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
+        href: '/pharmacy/dashboard',
     },
 ];
 
@@ -35,19 +36,21 @@ interface PageProps {
             email: string;
         };
     };
+    totalMedicines: number;
+    walletBalance: number;
     [key: string]: any;
 }
 
 export default function PharmacyDashboard() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, totalMedicines, walletBalance } = usePage<PageProps>().props;
 
-    // Mock data - all data is in the frontend
+    // Mock data - only for items not yet dynamic
     const stats = {
-        totalMedicines: 1245,
+        totalMedicines: totalMedicines || 0,
         lowStockItems: 23,
         pendingOrders: 18,
         prescriptionRequests: 12,
-        todayRevenue: 45600,
+        todayRevenue: walletBalance || 0,
         monthlyRevenue: 1245000,
         revenueGrowth: 15.3,
         totalOrders: 342,
@@ -233,11 +236,11 @@ export default function PharmacyDashboard() {
                                 <DollarSign className="h-6 w-6 text-emerald-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Today's Revenue</p>
-                                <p className="text-xl font-bold text-gray-900">₦{stats.todayRevenue.toLocaleString()}</p>
+                                <p className="text-sm text-gray-600">Wallet Balance</p>
+                                <p className="text-xl font-bold text-gray-900">${walletBalance?.toLocaleString() || '0.00'}</p>
                                 <div className="flex items-center gap-1 text-xs text-emerald-600">
                                     <TrendingUp className="h-3 w-3" />
-                                    <span>+{stats.revenueGrowth}%</span>
+                                    <span>Available</span>
                                 </div>
                             </div>
                         </div>

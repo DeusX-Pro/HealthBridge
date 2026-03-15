@@ -35,6 +35,7 @@ import {
     Timer,
     UserCheck,
     Award,
+    MapPin,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -51,21 +52,20 @@ interface PageProps {
             email: string;
         };
     };
+    upcomingAppointments: any[];
+    todayAppointmentsCount: number;
+    totalPatientsCount: number;
+    walletBalance: number;
     [key: string]: any;
 }
 
 export default function Dashboard() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, upcomingAppointments = [], todayAppointmentsCount = 0, totalPatientsCount = 0, walletBalance = 0 } = usePage<PageProps>().props;
 
-    // Mock data - all data is in the frontend
+    // Mock data - only for items not yet dynamic
     const stats = {
-        todayAppointments: 8,
-        totalPatients: 342,
-        pendingConsultations: 5,
         activePrescriptions: 23,
         unreadMessages: 12,
-        upcomingSchedule: 3,
-        walletBalance: 15240.50,
         labResultsPending: 7,
         availabilityStatus: 'Available',
         recentRecords: 15,
@@ -78,39 +78,6 @@ export default function Dashboard() {
         averageRating: 4.8,
         totalReviews: 156,
     };
-
-    const upcomingAppointments = [
-        {
-            id: 1,
-            patientName: 'Sarah Williams',
-            type: 'Telehealth',
-            reason: 'Follow-up Consultation',
-            time: '10:00 AM',
-            duration: '30 min',
-            status: 'confirmed',
-            avatar: 'SW',
-        },
-        {
-            id: 2,
-            patientName: 'Michael Chen',
-            type: 'In-Person',
-            reason: 'General Checkup',
-            time: '11:30 AM',
-            duration: '45 min',
-            status: 'pending',
-            avatar: 'MC',
-        },
-        {
-            id: 3,
-            patientName: 'Emily Davis',
-            type: 'Telehealth',
-            reason: 'Lab Results Review',
-            time: '2:00 PM',
-            duration: '20 min',
-            status: 'confirmed',
-            avatar: 'ED',
-        },
-    ];
 
     const recentPatients = [
         {
@@ -194,10 +161,11 @@ export default function Dashboard() {
                         <div className="flex items-start justify-between">
                             <div className="space-y-2">
                                 <h1 className="text-2xl font-bold sm:text-3xl">
-                                    Good Morning, Dr. {auth.user.name} 👨‍⚕️
+                                    Welcome back, {auth.user.name}! 👋
                                 </h1>
                                 <p className="max-w-2xl text-sm text-blue-50 sm:text-base">
-                                    You have {stats.todayAppointments} appointments today and {stats.pendingConsultations} pending consultations. Ready to make a difference!
+                                    You have {todayAppointmentsCount} appointments scheduled for today.
+                                    Ready to make an impact?
                                 </p>
                             </div>
                             <div className="hidden sm:block">
@@ -206,27 +174,18 @@ export default function Dashboard() {
                         </div>
                         <div className="mt-6 flex flex-wrap gap-3">
                             <Link href="/doctor/appointments">
-                                <Button
-                                    variant="outline"
-                                    className="bg-white text-blue-700 shadow-lg hover:bg-blue-50"
-                                >
+                                <Button className="bg-white text-blue-700 shadow-lg hover:bg-blue-50">
                                     <Calendar className="mr-2 h-4 w-4" />
-                                    Today's Schedule
+                                    Manage Appointments
                                 </Button>
                             </Link>
                             <Link href="/doctor/patients">
-                                <Button className="bg-white text-blue-700 shadow-lg hover:bg-blue-50">
-                                    <Users className="mr-2 h-4 w-4" />
-                                    My Patients
-                                </Button>
-                            </Link>
-                            <Link href="/doctor/telemedicine">
                                 <Button
                                     variant="outline"
-                                    className="bg-white text-blue-700 shadow-lg hover:bg-blue-50"
+                                    className="bg-white/10 text-white border-white/20 hover:bg-white/20"
                                 >
-                                    <Video className="mr-2 h-4 w-4" />
-                                    Start Telemedicine
+                                    <Users className="mr-2 h-4 w-4" />
+                                    My Patients
                                 </Button>
                             </Link>
                         </div>
@@ -243,9 +202,15 @@ export default function Dashboard() {
                                 <Calendar className="h-6 w-6 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Today's Appointments</p>
-                                <p className="text-xl font-bold text-gray-900">{stats.todayAppointments}</p>
-                                <p className="text-xs text-gray-500">2 pending</p>
+                                <p className="text-sm text-gray-600">
+                                    Upcoming
+                                </p>
+                                <p className="text-xl font-bold text-gray-900">
+                                    {upcomingAppointments.length}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    Next: {upcomingAppointments[0]?.appointment_time || 'None'}
+                                </p>
                             </div>
                         </div>
                     </Card>
@@ -257,7 +222,7 @@ export default function Dashboard() {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-600">Total Patients</p>
-                                <p className="text-xl font-bold text-gray-900">{stats.totalPatients}</p>
+                                <p className="text-xl font-bold text-gray-900">{totalPatientsCount}</p>
                                 <div className="flex items-center gap-1 text-xs text-green-600">
                                     <TrendingUp className="h-3 w-3" />
                                     <span>+{stats.patientGrowth}%</span>
@@ -285,9 +250,9 @@ export default function Dashboard() {
                                 <Wallet className="h-6 w-6 text-emerald-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Today's Revenue</p>
-                                <p className="text-xl font-bold text-gray-900">₦{stats.todayRevenue.toLocaleString()}</p>
-                                <p className="text-xs text-gray-500">From 5 consultations</p>
+                                <p className="text-sm text-gray-600">Wallet Balance</p>
+                                <p className="text-xl font-bold text-gray-900">${walletBalance.toLocaleString()}</p>
+                                <p className="text-xs text-gray-500">Available</p>
                             </div>
                         </div>
                     </Card>
@@ -360,17 +325,17 @@ export default function Dashboard() {
                             <h2 className="text-lg font-bold text-gray-900">Wallet Balance</h2>
                         </div>
                         <div className="mb-4">
-                            <p className="text-3xl font-bold text-gray-900">₦{stats.walletBalance.toLocaleString()}</p>
+                            <p className="text-3xl font-bold text-gray-900">${walletBalance.toLocaleString()}</p>
                             <p className="text-sm text-gray-600">Available for withdrawal</p>
                         </div>
                         <div className="mb-4 space-y-2">
                             <div className="flex items-center justify-between rounded-lg bg-white p-3">
                                 <span className="text-sm text-gray-700">Pending Payments</span>
-                                <span className="text-sm font-bold text-orange-600">₦3,450</span>
+                                <span className="text-sm font-bold text-orange-600">$34.50</span>
                             </div>
                             <div className="flex items-center justify-between rounded-lg bg-white p-3">
-                                <span className="text-sm text-gray-700">This Month</span>
-                                <span className="text-sm font-bold text-green-600">₦{stats.monthlyEarnings.toLocaleString()}</span>
+                                <span className="text-sm text-gray-700">Total Balance</span>
+                                <span className="text-sm font-bold text-green-600">${walletBalance.toLocaleString()}</span>
                             </div>
                         </div>
                         <Link href="/doctor/wallet">
@@ -389,70 +354,71 @@ export default function Dashboard() {
                         <div className="mb-6 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5 text-blue-600" />
-                                <h2 className="text-lg font-bold text-gray-900">Today's Appointments</h2>
+                                <h2 className="text-lg font-bold text-gray-900">
+                                    Upcoming Appointments
+                                </h2>
                             </div>
                             <Link href="/doctor/appointments">
-                                <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
-                                    View All
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-blue-600 hover:text-blue-700"
+                                >
+                                    View Schedule
                                     <ChevronRight className="ml-1 h-4 w-4" />
                                 </Button>
                             </Link>
                         </div>
 
                         <div className="space-y-4">
-                            {upcomingAppointments.map((appointment) => (
-                                <div
-                                    key={appointment.id}
-                                    className={`flex items-center gap-4 rounded-xl border p-4 ${
-                                        appointment.status === 'confirmed'
-                                            ? 'border-green-100 bg-green-50'
-                                            : 'border-orange-100 bg-orange-50'
-                                    }`}
-                                >
-                                    <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">
-                                        {appointment.avatar}
+                            {upcomingAppointments.slice(0, 3).map((apt: any) => (
+                                <div key={apt.uuid} className="flex items-center gap-4 rounded-xl border border-blue-100 bg-blue-50 p-4">
+                                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white">
+                                        <User className="h-6 w-6" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <div className="mb-1 flex items-center gap-2">
-                                            <h3 className="font-semibold text-gray-900">{appointment.patientName}</h3>
-                                            <span className={`rounded-full px-2 py-0.5 text-xs text-white ${
-                                                appointment.type === 'Telehealth' ? 'bg-green-600' : 'bg-blue-600'
-                                            }`}>
-                                                {appointment.type}
+                                            <h3 className="font-semibold text-gray-900">
+                                                {apt.patient?.user?.name || 'Patient'}
+                                            </h3>
+                                            <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white">
+                                                {apt.type}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-gray-600">{appointment.reason}</p>
-                                        <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                                            <span className="flex items-center gap-1">
+                                                <Calendar className="h-3 w-3" />
+                                                {apt.appointment_date}
+                                            </span>
                                             <span className="flex items-center gap-1">
                                                 <Clock className="h-3 w-3" />
-                                                {appointment.time}
+                                                {apt.appointment_time}
                                             </span>
-                                            <span>•</span>
-                                            <span>{appointment.duration}</span>
+                                            <span className="flex items-center gap-1">
+                                                <MapPin className="h-3 w-3" />
+                                                Video Call
+                                            </span>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col gap-2">
-                                        {appointment.type === 'Telehealth' && (
-                                            <Link href="/doctor/telemedicine">
-                                                <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                                                    <Video className="mr-1 h-3 w-3" />
-                                                    Join
-                                                </Button>
-                                            </Link>
-                                        )}
+                                    <div className="flex gap-2">
                                         <Button size="sm" variant="outline">
-                                            View Details
+                                            Details
                                         </Button>
+                                        <Link href="/doctor/consultation">
+                                            <Button
+                                                size="sm"
+                                                className="bg-blue-600 hover:bg-blue-700"
+                                            >
+                                                Start
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </div>
                             ))}
 
-                            <Link href="/doctor/schedule">
-                                <Button variant="outline" className="w-full border-2 border-dashed text-blue-600 hover:bg-blue-50">
-                                    <CalendarCheck className="mr-2 h-4 w-4" />
-                                    Manage Schedule
-                                </Button>
-                            </Link>
+                            {upcomingAppointments.length === 0 && (
+                                <p className="text-center py-8 text-gray-500 italic">No upcoming appointments</p>
+                            )}
                         </div>
                     </Card>
 
@@ -718,7 +684,7 @@ export default function Dashboard() {
                                             Consultations
                                         </p>
                                         <p className="text-xs text-gray-600">
-                                            {stats.pendingConsultations} pending
+                                            0 pending
                                         </p>
                                     </div>
                                     <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-orange-600" />

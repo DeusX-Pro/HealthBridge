@@ -57,8 +57,8 @@ const navigationItems = [
     { name: 'Doctors', href: '/patient/doctors', icon: Stethoscope },
     { name: 'Pharmacies', href: '/patient/pharmacies', icon: Store },
     
-    { name: 'Prescriptions', href: '/patient/prescriptions', icon: Pill },
     { name: 'Lab Results', href: '/patient/lab-results', icon: FileText },
+    { name: 'Prescriptions', href: '/patient/prescriptions', icon: Pill },
     {name: 'Health Records', href: '/patient/health-records', icon: ClipboardList },
     { name: 'Health Tips', href: '/patient/health-tips', icon: Heart },
     // { name: 'Vitals Tracking', href: '/patient/vitals-tracking', icon: Activity },

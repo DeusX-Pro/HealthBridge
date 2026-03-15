@@ -1,0 +1,30 @@
+
+> build
+> vite build
+
+vite v7.1.5 building for production...
+[plugin @laravel/vite-plugin-wayfinder] Types generated for actions, routes, form variants
+transforming...
+✓ 2737 modules transformed.
+✗ Build failed in 8.26s
+error during build:
+resources/js/pages/dashboard/patient/medical_labs/index.tsx (4:9): "patient" is not exported by "resources/js/routes/index.ts", imported by "resources/js/pages/dashboard/patient/medical_labs/index.tsx".
+file: /Users/user/Documents/Softwares/DeusX/HealthBridge/resources/js/pages/dashboard/patient/medical_labs/index.tsx:4:9
+
+2: import { type BreadcrumbItem } from '@/types';
+3: import { Head, Link, usePage } from '@inertiajs/react';
+4: import { patient } from '@/routes';
+            ^
+5: import { Button } from '@/components/ui/button';
+6: import { Card } from '@/components/ui/card';
+
+    at getRollupError (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:16875:16)
+    at Module.traceVariable (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:17327:29)
+    at ModuleScope.findVariable (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:14997:39)
+    at MemberExpression.bind (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:7324:49)
+    at CallExpression.bind (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:2785:23)
+    at CallExpression.bind (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:12058:15)
+    at MemberExpression.bind (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:2785:23)
+    at MemberExpression.bind (file:///Users/user/Documents/Softwares/DeusX/HealthBridge/node_modules/rollup/dist/es/shared/node-entry.js:7339:19)

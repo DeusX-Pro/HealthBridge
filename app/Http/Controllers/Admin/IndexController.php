@@ -11,6 +11,23 @@ class IndexController extends Controller
     //
     public function index(): Response
     {
-        return inertia('dashboard/admin/index');
+        $totalUsers = \App\Models\User::count();
+        $totalDoctors = \App\Models\Doctor::count();
+        $totalPatients = \App\Models\Patient::count();
+        $totalPharmacies = \App\Models\Pharmacy::count();
+        $totalLabs = \App\Models\Medicallab::count();
+
+        return inertia(
+            'dashboard/admin/index',
+            [
+                'stats' => [
+                    'totalUsers' => $totalUsers,
+                    'totalDoctors' => $totalDoctors,
+                    'totalPatients' => $totalPatients,
+                    'totalPharmacies' => $totalPharmacies,
+                    'totalLabs' => $totalLabs,
+                ],
+            ]
+        );
     }
 }

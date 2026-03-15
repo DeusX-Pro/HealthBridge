@@ -50,6 +50,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Patient::class);
     }
 
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function vitals()
+    {
+        return $this->hasMany(Vital::class);
+    }
+
+    public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class);
+    }
+
+    public function walletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
     public function doctor()
     {
         return $this->hasOne(Doctor::class);
@@ -63,6 +83,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function medicallab()
     {
         return $this->hasOne(Medicallab::class);
+    }
+
+    public function balance()
+    {
+        $credits = $this->walletTransactions()
+            ->where('type', 'credit')
+            ->where('status', 'completed')
+            ->sum('amount');
+
+        $debits = $this->walletTransactions()
+            ->where('type', 'debit')
+            ->where('status', 'completed')
+            ->sum('amount');
+
+        return (float) ($credits - $debits);
     }
 
     

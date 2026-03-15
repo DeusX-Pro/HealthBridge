@@ -1,7 +1,7 @@
 import MedicalLabLayout from '@/layouts/medical-lab-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { medicalLab } from '@/routes';
+import medicalLab from '@/routes/medical-lab';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

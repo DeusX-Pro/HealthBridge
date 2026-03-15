@@ -24,6 +24,7 @@ import {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
+        href: '/medical-lab/dashboard',
     },
 ];
 
@@ -34,24 +35,24 @@ interface PageProps {
             email: string;
         };
     };
+    totalServices: number;
+    walletBalance: number;
     [key: string]: any;
 }
 
 export default function MedicalLabDashboard() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, totalServices, walletBalance } = usePage<PageProps>().props;
 
-    // Mock data - all data is in the frontend
+    // Mock data - only for items not yet dynamic
     const stats = {
-        totalServices: 45,
-        pendingOrders: 12,
-        completedTests: 234,
-        pendingResults: 8,
-        todayRevenue: 125000,
-        monthlyRevenue: 3450000,
-        revenueGrowth: 18.5,
-        totalOrders: 156,
-        completedOrders: 144,
-        averageOrderValue: 8500,
+        totalServices: totalServices || 0,
+        pendingTests: 15,
+        completedTests: 124,
+        totalRevenue: walletBalance || 0,
+        testGrowth: 12.5,
+        customerGrowth: 8.3,
+        turnaroundTime: '24h',
+        accuracyRate: 99.8,
     };
 
     const recentOrders = [
@@ -144,7 +145,7 @@ export default function MedicalLabDashboard() {
                                     Welcome, {auth.user.name} 🔬
                                 </h1>
                                 <p className="max-w-2xl text-sm text-teal-50 sm:text-base">
-                                    You have {stats.pendingOrders} pending orders and {stats.pendingResults} results ready to upload.
+                                    You have {stats.pendingTests} pending tests to process today.
                                 </p>
                             </div>
                             <div className="hidden sm:block">
@@ -203,11 +204,11 @@ export default function MedicalLabDashboard() {
                                 <ShoppingCart className="h-6 w-6 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Pending Orders</p>
-                                <p className="text-xl font-bold text-gray-900">{stats.pendingOrders}</p>
+                                <p className="text-sm text-gray-600">Pending Tests</p>
+                                <p className="text-xl font-bold text-gray-900">{stats.pendingTests}</p>
                                 <div className="flex items-center gap-1 text-xs text-blue-600">
                                     <TrendingUp className="h-3 w-3" />
-                                    <span>+8% this week</span>
+                                    <span>High priority</span>
                                 </div>
                             </div>
                         </div>
@@ -219,9 +220,9 @@ export default function MedicalLabDashboard() {
                                 <Upload className="h-6 w-6 text-orange-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Pending Results</p>
-                                <p className="text-xl font-bold text-gray-900">{stats.pendingResults}</p>
-                                <p className="text-xs text-gray-500">Ready to upload</p>
+                                <p className="text-sm text-gray-600">Accuracy Rate</p>
+                                <p className="text-xl font-bold text-gray-900">{stats.accuracyRate}%</p>
+                                <p className="text-xs text-gray-500">Industry standard</p>
                             </div>
                         </div>
                     </Card>
@@ -232,11 +233,11 @@ export default function MedicalLabDashboard() {
                                 <DollarSign className="h-6 w-6 text-emerald-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Today's Revenue</p>
-                                <p className="text-xl font-bold text-gray-900">₦{stats.todayRevenue.toLocaleString()}</p>
+                                <p className="text-sm text-gray-600">Wallet Balance</p>
+                                <p className="text-xl font-bold text-gray-900">₦{walletBalance?.toLocaleString() || '0.00'}</p>
                                 <div className="flex items-center gap-1 text-xs text-emerald-600">
                                     <TrendingUp className="h-3 w-3" />
-                                    <span>+{stats.revenueGrowth}%</span>
+                                    <span>Available</span>
                                 </div>
                             </div>
                         </div>
@@ -257,22 +258,22 @@ export default function MedicalLabDashboard() {
 
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <p className="text-sm text-gray-600 mb-2">Monthly Revenue</p>
-                                <p className="text-3xl font-bold text-gray-900">₦{stats.monthlyRevenue.toLocaleString()}</p>
+                                <p className="text-sm text-gray-600 mb-2">Wallet Balance</p>
+                                <p className="text-3xl font-bold text-gray-900">${walletBalance?.toLocaleString() || '0.00'}</p>
                                 <div className="flex items-center gap-1 mt-2 text-sm text-green-600">
                                     <TrendingUp className="w-4 h-4" />
-                                    <span>{stats.revenueGrowth}% from last month</span>
+                                    <span>Ready for withdrawal</span>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600 mb-2">Order Completion Rate</p>
+                                <p className="text-sm text-gray-600 mb-2">Accuracy Rate</p>
                                 <p className="text-3xl font-bold text-gray-900">
-                                    {Math.round((stats.completedOrders / stats.totalOrders) * 100)}%
+                                    {stats.accuracyRate}%
                                 </p>
                                 <div className="mt-3 bg-gray-200 rounded-full h-2">
                                     <div 
                                         className="bg-teal-500 h-2 rounded-full" 
-                                        style={{ width: `${(stats.completedOrders / stats.totalOrders) * 100}%` }}
+                                        style={{ width: `${stats.accuracyRate}%` }}
                                     ></div>
                                 </div>
                             </div>
@@ -281,29 +282,29 @@ export default function MedicalLabDashboard() {
                         <div className="mt-6 grid grid-cols-3 gap-4">
                             <div className="rounded-xl border border-teal-100 bg-teal-50 p-4">
                                 <div className="mb-2 flex items-center gap-2">
-                                    <ShoppingCart className="h-4 w-4 text-teal-600" />
-                                    <span className="text-xs font-medium text-gray-600">Total Orders</span>
+                                    <Microscope className="h-4 w-4 text-teal-600" />
+                                    <span className="text-xs font-medium text-gray-600">Active Services</span>
                                 </div>
-                                <p className="text-xl font-bold text-gray-900">{stats.totalOrders}</p>
-                                <p className="text-xs text-gray-500">This month</p>
+                                <p className="text-xl font-bold text-gray-900">{stats.totalServices}</p>
+                                <p className="text-xs text-gray-500">Current catalog</p>
                             </div>
 
                             <div className="rounded-xl border border-green-100 bg-green-50 p-4">
                                 <div className="mb-2 flex items-center gap-2">
                                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                    <span className="text-xs font-medium text-gray-600">Completed</span>
+                                    <span className="text-xs font-medium text-gray-600">Accuracy</span>
                                 </div>
-                                <p className="text-xl font-bold text-gray-900">{stats.completedOrders}</p>
-                                <p className="text-xs text-gray-500">This month</p>
+                                <p className="text-xl font-bold text-gray-900">{stats.accuracyRate}%</p>
+                                <p className="text-xs text-gray-500">Verified tests</p>
                             </div>
 
                             <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
                                 <div className="mb-2 flex items-center gap-2">
-                                    <DollarSign className="h-4 w-4 text-blue-600" />
-                                    <span className="text-xs font-medium text-gray-600">Avg. Order</span>
+                                    <Clock className="h-4 w-4 text-blue-600" />
+                                    <span className="text-xs font-medium text-gray-600">Turnaround</span>
                                 </div>
-                                <p className="text-xl font-bold text-gray-900">₦{stats.averageOrderValue.toLocaleString()}</p>
-                                <p className="text-xs text-gray-500">Per order</p>
+                                <p className="text-xl font-bold text-gray-900">{stats.turnaroundTime}</p>
+                                <p className="text-xs text-gray-500">Average time</p>
                             </div>
                         </div>
                     </Card>
@@ -339,7 +340,7 @@ export default function MedicalLabDashboard() {
                                             View Orders
                                         </p>
                                         <p className="text-xs text-gray-600">
-                                            {stats.pendingOrders} pending
+                                            {stats.pendingTests} pending
                                         </p>
                                     </div>
                                     <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600" />
@@ -356,7 +357,7 @@ export default function MedicalLabDashboard() {
                                             Upload Results
                                         </p>
                                         <p className="text-xs text-gray-600">
-                                            {stats.pendingResults} ready
+                                            {stats.pendingTests} ready
                                         </p>
                                     </div>
                                     <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-orange-600" />

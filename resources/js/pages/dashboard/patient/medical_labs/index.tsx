@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/patient-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { patient } from '@/routes';
+import patient from '@/routes/patient';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useState } from 'react';

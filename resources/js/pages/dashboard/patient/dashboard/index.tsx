@@ -51,11 +51,15 @@ interface PageProps {
             email: string;
         };
     };
+    nextAppointment: any;
+    latestVitals: any;
+    activePrescriptions: any[];
+    walletBalance: number;
     [key: string]: any;
 }
 
 export default function Dashboard() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, nextAppointment, latestVitals, activePrescriptions, walletBalance } = usePage<PageProps>().props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -133,9 +137,11 @@ export default function Dashboard() {
                                     Next Appointment
                                 </p>
                                 <p className="text-xl font-bold text-gray-900">
-                                    Tomorrow
+                                    {nextAppointment ? nextAppointment.appointment_date : 'None Scheduled'}
                                 </p>
-                                <p className="text-xs text-gray-500">2:00 PM</p>
+                                <p className="text-xs text-gray-500">
+                                    {nextAppointment ? nextAppointment.appointment_time : 'Book one now'}
+                                </p>
                             </div>
                         </div>
                     </Card>
@@ -150,10 +156,10 @@ export default function Dashboard() {
                                     Unread Messages
                                 </p>
                                 <p className="text-xl font-bold text-gray-900">
-                                    5
+                                    0
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                    New notifications
+                                    No new notifications
                                 </p>
                             </div>
                         </div>
@@ -169,7 +175,7 @@ export default function Dashboard() {
                                     Active Medications
                                 </p>
                                 <p className="text-xl font-bold text-gray-900">
-                                    3
+                                    {activePrescriptions.length}
                                 </p>
                                 <p className="text-xs text-gray-500">
                                     Prescriptions
@@ -188,10 +194,10 @@ export default function Dashboard() {
                                     Lab Results
                                 </p>
                                 <p className="text-xl font-bold text-gray-900">
-                                    2
+                                    0
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                    Available
+                                    None yet
                                 </p>
                             </div>
                         </div>
@@ -230,7 +236,7 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">
-                                    120/80
+                                    {latestVitals ? latestVitals.blood_pressure : '--/--'}
                                 </p>
                                 <p className="text-xs font-medium text-green-600">
                                     Normal
@@ -245,7 +251,7 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">
-                                    95 mg/dL
+                                    {latestVitals ? latestVitals.blood_sugar : '--'}
                                 </p>
                                 <p className="text-xs font-medium text-green-600">
                                     Normal
@@ -260,7 +266,7 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">
-                                    98.6°F
+                                    {latestVitals ? `${latestVitals.temperature}°C` : '--'}
                                 </p>
                                 <p className="text-xs font-medium text-green-600">
                                     Normal
@@ -275,10 +281,10 @@ export default function Dashboard() {
                                     </span>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">
-                                    72 kg
+                                    {latestVitals ? `${latestVitals.weight} kg` : '--'}
                                 </p>
                                 <p className="text-xs font-medium text-blue-600">
-                                    -0.5kg
+                                    Managed
                                 </p>
                             </div>
                         </div>
@@ -319,7 +325,7 @@ export default function Dashboard() {
                         </div>
                         <div className="mb-4">
                             <p className="text-3xl font-bold text-gray-900">
-                                $45.00
+                                ${walletBalance || '0.00'}
                             </p>
                             <p className="text-sm text-gray-600">
                                 Available Credits
@@ -381,74 +387,50 @@ export default function Dashboard() {
                         </div>
 
                         <div className="space-y-4">
-                            <div className="flex items-center gap-4 rounded-xl border border-green-100 bg-green-50 p-4">
-                                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-green-600 text-white">
-                                    <Video className="h-6 w-6" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <div className="mb-1 flex items-center gap-2">
-                                        <h3 className="font-semibold text-gray-900">
-                                            Dr. Sarah Johnson
-                                        </h3>
-                                        <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs text-white">
-                                            Telehealth
-                                        </span>
+                            {auth.user.patient?.appointments?.slice(0, 2).map((apt: any) => (
+                                <div key={apt.uuid} className="flex items-center gap-4 rounded-xl border border-green-100 bg-green-50 p-4">
+                                    <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-green-600 text-white">
+                                        <Video className="h-6 w-6" />
                                     </div>
-                                    <p className="text-sm text-gray-600">
-                                        General Consultation
-                                    </p>
-                                    <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
-                                        <span className="flex items-center gap-1">
-                                            <Calendar className="h-3 w-3" />
-                                            Tomorrow, Dec 15
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <Clock className="h-3 w-3" />
-                                            2:00 PM - 2:30 PM
-                                        </span>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="mb-1 flex items-center gap-2">
+                                            <h3 className="font-semibold text-gray-900">
+                                                {apt.doctor?.user?.name || 'Doctor'}
+                                            </h3>
+                                            <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs text-white">
+                                                {apt.type}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-600">
+                                            {apt.reason || 'General Consultation'}
+                                        </p>
+                                        <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                                            <span className="flex items-center gap-1">
+                                                <Calendar className="h-3 w-3" />
+                                                {apt.appointment_date}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <Clock className="h-3 w-3" />
+                                                {apt.appointment_time}
+                                            </span>
+                                        </div>
                                     </div>
+                                    {apt.appointment_date === new Date().toISOString().split('T')[0] && (
+                                        <Link href="/patient/telemedicine">
+                                            <Button
+                                                size="sm"
+                                                className="bg-green-600 hover:bg-green-700"
+                                            >
+                                                Join Now
+                                            </Button>
+                                        </Link>
+                                    )}
                                 </div>
-                                <Link href="/patient/telemedicine">
-                                    <Button
-                                        size="sm"
-                                        className="bg-green-600 hover:bg-green-700"
-                                    >
-                                        Join Now
-                                    </Button>
-                                </Link>
-                            </div>
+                            ))}
 
-                            <div className="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50 p-4">
-                                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white">
-                                    <Stethoscope className="h-6 w-6" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <div className="mb-1 flex items-center gap-2">
-                                        <h3 className="font-semibold text-gray-900">
-                                            Dr. Michael Chen
-                                        </h3>
-                                        <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white">
-                                            Volunteer
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-gray-600">
-                                        Follow-up Checkup
-                                    </p>
-                                    <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
-                                        <span className="flex items-center gap-1">
-                                            <Calendar className="h-3 w-3" />
-                                            Dec 18, 2024
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <Clock className="h-3 w-3" />
-                                            10:00 AM - 10:30 AM
-                                        </span>
-                                    </div>
-                                </div>
-                                <Button size="sm" variant="outline">
-                                    Reschedule
-                                </Button>
-                            </div>
+                            {(!auth.user.patient?.appointments || auth.user.patient.appointments.length === 0) && (
+                                <p className="text-center py-8 text-gray-500 italic">No upcoming appointments</p>
+                            )}
 
                             <Link href="/patient/appointments">
                                 <Button
@@ -562,59 +544,30 @@ export default function Dashboard() {
                             </Link>
                         </div>
                         <div className="space-y-3">
-                            <div className="rounded-xl border border-orange-100 bg-orange-50 p-4">
-                                <div className="mb-2 flex items-start justify-between">
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900">
-                                            Amoxicillin 500mg
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            3 times daily after meals
-                                        </p>
+                            {activePrescriptions.map((pres: any) => (
+                                <div key={pres.uuid} className="rounded-xl border border-orange-100 bg-orange-50 p-4">
+                                    <div className="mb-2 flex items-start justify-between">
+                                        <div>
+                                            <h3 className="font-semibold text-gray-900">
+                                                {pres.notes.split(' - ')[0] || 'Prescription'}
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                {pres.notes.split(' - ')[1] || pres.notes}
+                                            </p>
+                                        </div>
+                                        <span className="rounded-full bg-orange-600 px-2 py-1 text-xs text-white">
+                                            {pres.status}
+                                        </span>
                                     </div>
-                                    <span className="rounded-full bg-orange-600 px-2 py-1 text-xs text-white">
-                                        Active
-                                    </span>
-                                </div>
-                                <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
-                                    <span>Prescribed by Dr. Sarah Johnson</span>
-                                    <span>•</span>
-                                    <span>5 days remaining</span>
-                                </div>
-                                <div className="mt-3">
-                                    <div className="mb-1 flex justify-between text-xs text-gray-600">
-                                        <span>Progress</span>
-                                        <span>50%</span>
-                                    </div>
-                                    <div className="h-2 w-full rounded-full bg-gray-200">
-                                        <div
-                                            className="h-2 rounded-full bg-orange-600"
-                                            style={{ width: '50%' }}
-                                        ></div>
+                                    <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
+                                        <span>Prescribed by {pres.doctor?.user?.name || 'Doctor'}</span>
                                     </div>
                                 </div>
-                            </div>
+                            ))}
 
-                            <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
-                                <div className="mb-2 flex items-start justify-between">
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900">
-                                            Vitamin D3 1000IU
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            Once daily in the morning
-                                        </p>
-                                    </div>
-                                    <span className="rounded-full bg-blue-600 px-2 py-1 text-xs text-white">
-                                        Ongoing
-                                    </span>
-                                </div>
-                                <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
-                                    <span>Prescribed by Dr. Michael Chen</span>
-                                    <span>•</span>
-                                    <span>Long-term</span>
-                                </div>
-                            </div>
+                            {activePrescriptions.length === 0 && (
+                                <p className="text-center py-8 text-gray-500 italic">No active prescriptions</p>
+                            )}
 
                             <Link href="/patient/prescriptions">
                                 <Button
