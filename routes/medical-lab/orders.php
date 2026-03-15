@@ -1,11 +1,10 @@
 <?php
 
-use Inertia\Inertia;
+use App\Http\Controllers\MedicalLab\OrderController;
+use App\Http\Middleware\MedicalLabMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified'])->prefix('medical-lab')->name('medical-lab.')->group(function () {
-    Route::get('/orders', function () {
-        return Inertia::render('dashboard/medical-lab/orders/index');
-    })->name('orders');
+Route::middleware(['auth', 'verified', MedicalLabMiddleware::class])->prefix('medical-lab')->name('medical-lab.')->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
 });
-

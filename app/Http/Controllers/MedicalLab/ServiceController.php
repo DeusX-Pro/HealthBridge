@@ -21,6 +21,7 @@ class ServiceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('medicallab');
         $medicallab = $user->medicallab;
 
         if (!$medicallab) {
@@ -50,6 +51,7 @@ class ServiceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('medicallab');
         $medicallab = $user->medicallab;
 
         if (!$medicallab) {
@@ -79,6 +81,7 @@ class ServiceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('medicallab');
         $medicallab = $user->medicallab;
 
         if (!$medicallab) {
@@ -114,6 +117,7 @@ class ServiceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('medicallab');
         $medicallab = $user->medicallab;
 
         if (!$medicallab) {
@@ -150,6 +154,7 @@ class ServiceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('medicallab');
         $medicallab = $user->medicallab;
 
         if (!$medicallab) {
@@ -189,6 +194,7 @@ class ServiceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('medicallab');
         $medicallab = $user->medicallab;
 
         if (!$medicallab) {
