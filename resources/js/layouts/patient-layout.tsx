@@ -32,6 +32,7 @@ import {
     Video,
     Wallet,
     X,
+    FlaskConical
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 
@@ -56,6 +57,7 @@ const navigationItems = [
     { name: 'Appointments', href: '/patient/appointments', icon: Calendar },
     { name: 'Doctors', href: '/patient/doctors', icon: Stethoscope },
     { name: 'Pharmacies', href: '/patient/pharmacies', icon: Store },
+    { name: 'Medical Labs', href: '/patient/medical-labs', icon: FlaskConical },
     
     { name: 'Lab Results', href: '/patient/lab-results', icon: FileText },
     { name: 'Prescriptions', href: '/patient/prescriptions', icon: Pill },

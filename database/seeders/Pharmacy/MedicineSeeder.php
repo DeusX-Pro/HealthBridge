@@ -191,6 +191,8 @@ class MedicineSeeder extends Seeder
                             'is_restricted' => $medicineData['is_restricted'] ?? false,
                             'requires_id_verification' => $medicineData['requires_id_verification'] ?? false,
                             'status' => $medicineData['status'] ?? 'active',
+                            'price' => fake()->randomFloat(2, 500, 15000),
+                            'stock' => rand(10, 100),
                         ]
                     )
                 );

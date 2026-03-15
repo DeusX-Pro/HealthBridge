@@ -15,7 +15,9 @@ class MedicalLabController extends Controller
 {
     public function index(): Response
     {
-        $labs = Medicallab::with('services')->get();
+        $labs = Medicallab::with(['user', 'services'])
+            ->where('status', 'approved')
+            ->get();
         return inertia('dashboard/patient/medical_labs/index', [
             'labs' => $labs,
         ]);
@@ -23,7 +25,7 @@ class MedicalLabController extends Controller
 
     public function show(Medicallab $lab): Response
     {
-        $lab->load('services');
+        $lab->load(['user', 'services']);
         return inertia('dashboard/patient/medical_labs/show', [
             'lab' => $lab,
         ]);

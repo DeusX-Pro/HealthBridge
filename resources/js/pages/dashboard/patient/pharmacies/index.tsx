@@ -43,11 +43,12 @@ interface PageProps {
             email: string;
         };
     };
+    pharmacies: any[];
     [key: string]: any;
 }
 
 export default function Pharmacies() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, pharmacies: dbPharmacies } = usePage<PageProps>().props;
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('all');
 
@@ -58,93 +59,24 @@ export default function Pharmacies() {
         { id: 'nearby', name: 'Nearby', icon: MapPin },
     ];
 
-    const pharmacies = [
-        {
-            id: 1,
-            name: 'HealthPlus Pharmacy',
-            address: '123 Main Street, Downtown',
-            distance: 0.3,
-            rating: 4.8,
-            reviews: 156,
-            phone: '+1 (555) 123-4567',
-            hours: {
-                open: '24/7',
-                isOpen: true,
-            },
-            services: ['Home Delivery', 'Online Orders', 'Insurance Accepted', 'Prescription Refills'],
-            deliveryTime: '30-45 min',
-            featured: true,
-            inNetwork: true,
+    const pharmacies = dbPharmacies.map((pharm: any) => ({
+        id: pharm.id,
+        uuid: pharm.uuid,
+        name: pharm.business_name || (pharm.user?.name || 'Pharmacy'),
+        address: pharm.address || (pharm.city ? `${pharm.city}, ${pharm.state}` : 'Main Street'),
+        distance: (Math.random() * 2).toFixed(1), // Mocked
+        rating: 4.7, // Mocked
+        reviews: Math.floor(Math.random() * 150) + 20,
+        phone: pharm.user?.phone_number || '+1 (555) 000-0000',
+        hours: {
+            open: '24/7',
+            isOpen: true,
         },
-        {
-            id: 2,
-            name: 'MedCare Drugstore',
-            address: '456 Oak Avenue, Medical District',
-            distance: 0.7,
-            rating: 4.6,
-            reviews: 89,
-            phone: '+1 (555) 234-5678',
-            hours: {
-                open: '8:00 AM - 10:00 PM',
-                isOpen: true,
-            },
-            services: ['Free Parking', 'Insurance Accepted', 'Prescription Refills'],
-            deliveryTime: '45-60 min',
-            featured: false,
-            inNetwork: true,
-        },
-        {
-            id: 3,
-            name: 'Community Pharmacy',
-            address: '789 Elm Street, Suburban Area',
-            distance: 0.5,
-            rating: 4.3,
-            reviews: 95,
-            phone: '+1 (555) 345-6789',
-            hours: {
-                open: '9:00 AM - 8:00 PM',
-                isOpen: true,
-            },
-            services: ['Home Delivery', 'Health Consultations', 'Prescription Refills'],
-            deliveryTime: '60-90 min',
-            featured: false,
-            inNetwork: true,
-        },
-        {
-            id: 4,
-            name: 'QuickMeds Express',
-            address: '321 Pine Road, City Center',
-            distance: 1.2,
-            rating: 4.7,
-            reviews: 143,
-            phone: '+1 (555) 456-7890',
-            hours: {
-                open: '7:00 AM - 11:00 PM',
-                isOpen: true,
-            },
-            services: ['Express Delivery', 'Online Orders', 'Mobile App', 'Insurance Accepted'],
-            deliveryTime: '20-30 min',
-            featured: true,
-            inNetwork: true,
-        },
-        {
-            id: 5,
-            name: 'WellCare Pharmacy',
-            address: '555 Maple Drive, Northside',
-            distance: 1.5,
-            rating: 4.5,
-            reviews: 112,
-            phone: '+1 (555) 567-8901',
-            hours: {
-                open: 'Closed',
-                isOpen: false,
-            },
-            services: ['Insurance Accepted', 'Prescription Refills', 'Immunizations'],
-            deliveryTime: null,
-            featured: false,
-            inNetwork: false,
-        },
-    ];
+        services: ['Home Delivery', 'Online Orders', 'Insurance Accepted', 'Prescription Refills'],
+        deliveryTime: '30-45 min',
+        featured: pharm.id % 4 === 0, // Mocked logic
+        inNetwork: true,
+    }));
 
     const prescriptionOrders = [
         {
@@ -170,7 +102,7 @@ export default function Pharmacies() {
         let matchesFilter = true;
         if (selectedFilter === 'open-now') matchesFilter = pharmacy.hours.isOpen;
         if (selectedFilter === 'delivery') matchesFilter = pharmacy.services.includes('Home Delivery');
-        if (selectedFilter === 'nearby') matchesFilter = pharmacy.distance < 1;
+        if (selectedFilter === 'nearby') matchesFilter = Number(pharmacy.distance) < 1;
         
         return matchesSearch && matchesFilter;
     });
@@ -216,7 +148,7 @@ export default function Pharmacies() {
                 </div>
 
                 {/* Prescription Orders Status */}
-                {prescriptionOrders.length > 0 && (
+                {/* {prescriptionOrders.length > 0 && (
                     <Card className="p-6">
                         <div className="mb-4 flex items-center justify-between">
                             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900">
@@ -271,7 +203,7 @@ export default function Pharmacies() {
                             ))}
                         </div>
                     </Card>
-                )}
+                )} */}
 
                 {/* Search and Filters */}
                 <Card className="p-4">
@@ -329,7 +261,12 @@ export default function Pharmacies() {
                                     <div className="flex-1">
                                         <div className="mb-2 flex items-center gap-2">
                                             <h3 className="text-xl font-bold text-gray-900">
-                                                {pharmacy.name}
+                                                <Link 
+                                                    href={`/patient/pharmacies/${pharmacy.uuid}`}
+                                                    className="hover:text-green-600 transition-colors"
+                                                >
+                                                    {pharmacy.name}
+                                                </Link>
                                             </h3>
                                             {pharmacy.featured && (
                                                 <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold text-white">
@@ -418,10 +355,15 @@ export default function Pharmacies() {
 
                                 {/* Actions */}
                                 <div className="flex gap-2">
-                                    <Button className="flex-1 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700">
-                                        <ShoppingCart className="mr-2 h-4 w-4" />
-                                        Order Online
-                                    </Button>
+                                    <Link 
+                                        href={`/patient/pharmacies/${pharmacy.uuid}`}
+                                        className="flex-1"
+                                    >
+                                        <Button className="w-full bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700">
+                                            <ShoppingCart className="mr-2 h-4 w-4" />
+                                            Order Online
+                                        </Button>
+                                    </Link>
                                     <Button variant="outline">
                                         <Navigation className="h-4 w-4" />
                                     </Button>

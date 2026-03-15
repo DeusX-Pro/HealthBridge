@@ -8,4 +8,5 @@ use App\Http\Middleware\PatientMiddleware;
 
 Route::middleware(['auth', 'verified', PatientMiddleware::class])->group(function () {
     Route::get('patient/doctors', [DoctorController::class, 'index'])->name('patient.doctors');
+    Route::get('patient/doctors/{doctor:uuid}', [DoctorController::class, 'show'])->name('patient.doctors.show');
 });

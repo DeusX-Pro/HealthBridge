@@ -10,6 +10,7 @@ use App\Http\Controllers\Patient\PharmacyOrderController;
 
 Route::middleware(['auth', 'verified', PatientMiddleware::class])->group(function () {
     Route::get('patient/pharmacies', [PharmaciesController::class, 'index'])->name('patient.pharmacies');
+    Route::get('patient/pharmacies/{pharmacy:uuid}', [PharmaciesController::class, 'show'])->name('patient.pharmacies.show');
     
     // Orders
     Route::get('patient/pharmacy/orders', [PharmacyOrderController::class, 'index'])->name('patient.pharmacy.orders');

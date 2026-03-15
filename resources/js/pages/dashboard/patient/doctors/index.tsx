@@ -42,11 +42,12 @@ interface PageProps {
             email: string;
         };
     };
+    doctors: any[];
     [key: string]: any;
 }
 
 export default function Doctors() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth, doctors: dbDoctors } = usePage<PageProps>().props;
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSpecialty, setSelectedSpecialty] = useState('all');
     const [selectedType, setSelectedType] = useState('all');
@@ -63,110 +64,24 @@ export default function Doctors() {
         { id: 'neurology', name: 'Neurology', icon: '🧠' },
     ];
 
-    const doctors = [
-        {
-            id: 1,
-            name: 'Dr. Sarah Johnson',
-            specialty: 'Cardiologist',
-            specialtyId: 'cardiology',
-            rating: 4.9,
-            reviews: 234,
-            experience: 15,
-            patients: 1200,
-            avatar: 'SJ',
-            availability: 'Available Today',
-            nextSlot: '2:00 PM',
-            consultationFee: 50,
-            location: 'City General Hospital',
-            type: 'video',
-            verified: true,
-        },
-        {
-            id: 2,
-            name: 'Dr. Michael Chen',
-            specialty: 'General Physician',
-            specialtyId: 'general',
-            rating: 4.8,
-            reviews: 189,
-            experience: 12,
-            patients: 980,
-            avatar: 'MC',
-            availability: 'Available Today',
-            nextSlot: '10:00 AM',
-            consultationFee: 40,
-            location: 'Wellness Clinic',
-            type: 'both',
-            verified: true,
-        },
-        {
-            id: 3,
-            name: 'Dr. Emily Rodriguez',
-            specialty: 'Dermatologist',
-            specialtyId: 'dermatology',
-            rating: 4.7,
-            reviews: 156,
-            experience: 10,
-            patients: 750,
-            avatar: 'ER',
-            availability: 'Tomorrow',
-            nextSlot: '3:30 PM',
-            consultationFee: 60,
-            location: 'Skin Care Center',
-            type: 'video',
-            verified: true,
-        },
-        {
-            id: 4,
-            name: 'Dr. James Wilson',
-            specialty: 'Orthopedic Surgeon',
-            specialtyId: 'orthopedic',
-            rating: 4.9,
-            reviews: 201,
-            experience: 18,
-            patients: 1500,
-            avatar: 'JW',
-            availability: 'Available Today',
-            nextSlot: '11:00 AM',
-            consultationFee: 70,
-            location: 'Orthopedic Care Center',
-            type: 'in-person',
-            verified: true,
-        },
-        {
-            id: 5,
-            name: 'Dr. Lisa Anderson',
-            specialty: 'Pediatrician',
-            specialtyId: 'pediatrics',
-            rating: 4.8,
-            reviews: 178,
-            experience: 14,
-            patients: 1100,
-            avatar: 'LA',
-            availability: 'Available Today',
-            nextSlot: '9:00 AM',
-            consultationFee: 45,
-            location: 'Children Hospital',
-            type: 'both',
-            verified: true,
-        },
-        {
-            id: 6,
-            name: 'Dr. Robert Martinez',
-            specialty: 'Dentist',
-            specialtyId: 'dentistry',
-            rating: 4.6,
-            reviews: 143,
-            experience: 11,
-            patients: 850,
-            avatar: 'RM',
-            availability: 'Tomorrow',
-            nextSlot: '4:00 PM',
-            consultationFee: 55,
-            location: 'Dental Care Center',
-            type: 'in-person',
-            verified: true,
-        },
-    ];
+    const doctors = dbDoctors.map((doc: any) => ({
+        id: doc.id,
+        uuid: doc.uuid,
+        name: doc.user?.name || 'Dr. ' + (doc.user?.email?.split('@')[0] || 'Unknown'),
+        specialty: doc.specialization || 'General Practitioner',
+        specialtyId: doc.specialization?.toLowerCase() || 'general',
+        rating: 4.8, // Mocked as not in DB yet
+        reviews: Math.floor(Math.random() * 200) + 50,
+        experience: doc.years_of_experience || 5,
+        patients: Math.floor(Math.random() * 1000) + 100,
+        avatar: (doc.user?.name?.charAt(0) || 'D'),
+        availability: 'Available Today',
+        nextSlot: '2:00 PM',
+        consultationFee: doc.consultation_fee || 50,
+        location: doc.hospital_affiliation || (doc.city ? `${doc.city}, ${doc.state}` : 'City Clinic'),
+        type: doc.consultation_type || 'video',
+        verified: !!doc.verified_at,
+    }));
 
     const filteredDoctors = doctors.filter((doctor) => {
         const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -409,11 +324,15 @@ export default function Doctors() {
                                             )}
                                         </div>
                                         <div className="flex flex-col items-center">
-                                            <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-xl font-bold shadow-lg backdrop-blur-sm sm:h-20 sm:w-20 sm:text-2xl">
-                                                {doctor.avatar}
-                                            </div>
+                                            <Link href={`/patient/doctors/${doctor.uuid}`} className="group/avatar relative mb-3">
+                                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-xl font-bold shadow-lg backdrop-blur-sm sm:h-20 sm:w-20 sm:text-2xl transition-transform group-hover/avatar:scale-105">
+                                                    {doctor.avatar}
+                                                </div>
+                                            </Link>
                                             <h3 className="text-center text-base font-bold sm:text-lg">
-                                                {doctor.name}
+                                                <Link href={`/patient/doctors/${doctor.uuid}`} className="hover:text-green-100 transition-colors">
+                                                    {doctor.name}
+                                                </Link>
                                             </h3>
                                             <p className="text-center text-xs text-green-100 sm:text-sm">
                                                 {doctor.specialty}
@@ -492,7 +411,7 @@ export default function Doctors() {
                                         </div>
                                         
                                         {/* View Profile Link */}
-                                        <Link href={`/patient/doctors/${doctor.id}`}>
+                                        <Link href={`/patient/doctors/${doctor.uuid}`}>
                                             <button className="mt-3 flex w-full items-center justify-center gap-1 text-xs font-medium text-green-600 hover:text-green-700 sm:text-sm">
                                                 View Full Profile
                                                 <ChevronRight className="h-4 w-4" />
