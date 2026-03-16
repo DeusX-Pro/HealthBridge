@@ -31,6 +31,16 @@ class IndexController extends Controller
             ->where('status', 'active')
             ->get();
 
+        $allPharmacyOrders = $user->patient->pharmacyOrders()
+            ->with(['pharmacy', 'items.medicine'])
+            ->latest()
+            ->get();
+
+        $allLabOrders = $user->patient->labOrders()
+            ->with(['medicallab', 'service'])
+            ->latest()
+            ->get();
+
         return inertia(
             'dashboard/patient/dashboard/index',
             [
@@ -38,6 +48,8 @@ class IndexController extends Controller
                 'nextAppointment' => $nextAppointment,
                 'latestVitals' => $latestVitals,
                 'activePrescriptions' => $activePrescriptions,
+                'pharmacyOrders' => $allPharmacyOrders,
+                'labOrders' => $allLabOrders,
                 'walletBalance' => $user->balance(),
             ]
         );

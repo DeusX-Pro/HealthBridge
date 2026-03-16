@@ -28,7 +28,7 @@ class PharmacyOrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return Inertia::render('dashboard/patient/pharmacy/orders', [
+        return Inertia::render('dashboard/patient/pharmacies/orders', [
             'orders' => $orders
         ]);
     }
@@ -65,9 +65,8 @@ class PharmacyOrderController extends Controller
             $totalAmount = 0;
             foreach ($validated['items'] as $itemData) {
                 $medicine = Medicine::findOrFail($itemData['medicine_id']);
-                // Note: In a real app, you'd check if the medicine belongs to the pharmacy
-                // and use its actual price. For now, we'll assume a base price or use random for dummy purposes.
-                $unitPrice = 2500; // Fixed dummy price for logic
+                
+                $unitPrice = $medicine->price; 
                 $subtotal = $unitPrice * $itemData['quantity'];
                 
                 PharmacyOrderItem::create([
@@ -85,5 +84,19 @@ class PharmacyOrderController extends Controller
 
             return redirect()->route('patient.pharmacy.orders')->with('success', 'Order placed successfully.');
         });
+    }
+
+    public function show(PharmacyOrder $order): Response
+    {
+        // Ensure the order belongs to the authenticated patient
+        if ($order->patient_id !== Auth::user()->patient->id) {
+            abort(403);
+        }
+
+        $order->load(['pharmacy', 'items.medicine']);
+
+        return Inertia::render('dashboard/patient/pharmacies/order-details', [
+            'order' => $order
+        ]);
     }
 }

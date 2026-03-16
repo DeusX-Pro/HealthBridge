@@ -13,6 +13,11 @@ Route::middleware(['auth', 'verified', PatientMiddleware::class])->group(functio
     Route::get('patient/pharmacies/{pharmacy:uuid}', [PharmaciesController::class, 'show'])->name('patient.pharmacies.show');
     
     // Orders
+    Route::get('patient/pharmacy/checkout', function () {
+        return Inertia::render('dashboard/patient/pharmacies/checkout');
+    })->name('patient.pharmacy.checkout');
+    
     Route::get('patient/pharmacy/orders', [PharmacyOrderController::class, 'index'])->name('patient.pharmacy.orders');
+    Route::get('patient/pharmacy/orders/{order:uuid}', [PharmacyOrderController::class, 'show'])->name('patient.pharmacy.orders.show');
     Route::post('patient/pharmacy/orders', [PharmacyOrderController::class, 'store'])->name('patient.pharmacy.orders.store');
 });

@@ -58,6 +58,7 @@ require __DIR__ . '/patient/telemedicine.php';
 require __DIR__ . '/patient/vitals-tracking.php';
 require __DIR__ . '/patient/wallet.php';
 require __DIR__ . '/patient/medical-lab.php';
+require __DIR__ . '/patient/notification.php';
 // Patient Route Ends
 
 // Pharmacy Route Starts

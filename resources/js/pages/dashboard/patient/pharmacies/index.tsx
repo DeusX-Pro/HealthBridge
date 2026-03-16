@@ -256,24 +256,20 @@ export default function Pharmacies() {
                             }`}
                         >
                             {/* Header */}
-                            <div className={`p-6 ${pharmacy.featured ? 'bg-gradient-to-r from-green-50 to-green-50' : 'bg-gray-50'}`}>
-                                <div className="mb-3 flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <div className="mb-2 flex items-center gap-2">
-                                            <h3 className="text-xl font-bold text-gray-900">
-                                                <Link 
-                                                    href={`/patient/pharmacies/${pharmacy.uuid}`}
-                                                    className="hover:text-green-600 transition-colors"
-                                                >
+                            <Link href={`/patient/pharmacies/${pharmacy.uuid}`}>
+                                <div className={`p-6 ${pharmacy.featured ? 'bg-gradient-to-r from-green-50 to-green-50' : 'bg-gray-50'} cursor-pointer hover:bg-green-50 transition-colors`}>
+                                    <div className="mb-3 flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="mb-2 flex items-center gap-2">
+                                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600">
                                                     {pharmacy.name}
-                                                </Link>
-                                            </h3>
-                                            {pharmacy.featured && (
-                                                <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold text-white">
-                                                    Featured
-                                                </span>
-                                            )}
-                                        </div>
+                                                </h3>
+                                                {pharmacy.featured && (
+                                                    <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold text-white">
+                                                        Featured
+                                                    </span>
+                                                )}
+                                            </div>
                                         <div className="flex items-center gap-1">
                                             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                                             <span className="text-sm font-bold text-gray-900">
@@ -302,6 +298,7 @@ export default function Pharmacies() {
                                     </div>
                                 )}
                             </div>
+                        </Link>
 
                             {/* Body */}
                             <div className="p-6">
@@ -359,16 +356,13 @@ export default function Pharmacies() {
                                         href={`/patient/pharmacies/${pharmacy.uuid}`}
                                         className="flex-1"
                                     >
-                                        <Button className="w-full bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700">
+                                        <Button className="w-full bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 font-bold">
                                             <ShoppingCart className="mr-2 h-4 w-4" />
-                                            Order Online
+                                            View Menu
                                         </Button>
                                     </Link>
-                                    <Button variant="outline">
-                                        <Navigation className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="outline">
-                                        <Phone className="h-4 w-4" />
+                                    <Button variant="outline" className="border-2">
+                                        <Navigation className="h-4 w-4 text-green-600" />
                                     </Button>
                                 </div>
                             </div>

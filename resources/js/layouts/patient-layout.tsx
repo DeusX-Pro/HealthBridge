@@ -25,6 +25,7 @@ import {
     MessageSquare,
     Phone,
     Pill,
+    Package,
     Settings,
     Stethoscope,
     Store,
@@ -35,6 +36,9 @@ import {
     FlaskConical
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
+import { useCart } from '@/contexts/cart-context';
+import { CartSheet } from '@/components/pharmacy/cart-sheet';
+import { ShoppingCart as CartIcon } from 'lucide-react';
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -57,7 +61,9 @@ const navigationItems = [
     { name: 'Appointments', href: '/patient/appointments', icon: Calendar },
     { name: 'Doctors', href: '/patient/doctors', icon: Stethoscope },
     { name: 'Pharmacies', href: '/patient/pharmacies', icon: Store },
+    { name: 'Pharmacy Orders', href: '/patient/pharmacy/orders', icon: Package },
     { name: 'Medical Labs', href: '/patient/medical-labs', icon: FlaskConical },
+    { name: 'Notifications', href: '/patient/notifications', icon: Bell },
     
     { name: 'Lab Results', href: '/patient/lab-results', icon: FileText },
     { name: 'Prescriptions', href: '/patient/prescriptions', icon: Pill },
@@ -74,7 +80,9 @@ const navigationItems = [
 
 export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
     const { auth } = usePage<PageProps>().props;
+    const { itemCount } = useCart();
     const currentPath = window.location.pathname;
 
     const handleLogout = () => {
@@ -339,15 +347,32 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                                 </div>
                             </div> */}
 
-                            {/* Notifications */}
+                            {/* Cart */}
                             <Button
                                 variant="ghost"
                                 size="icon"
                                 className="relative transition-colors hover:bg-green-50 hover:text-green-600"
+                                onClick={() => setIsCartOpen(true)}
                             >
-                                <Bell className="h-5 w-5 text-black" />
-                                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-white" />
+                                <CartIcon className="h-5 w-5 text-black" />
+                                {itemCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-lg ring-2 ring-white">
+                                        {itemCount}
+                                    </span>
+                                )}
                             </Button>
+
+                            {/* Notifications */}
+                            <Link href="/patient/notifications">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="relative transition-colors hover:bg-green-50 hover:text-green-600"
+                                >
+                                    <Bell className="h-5 w-5 text-black" />
+                                    <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-white" />
+                                </Button>
+                            </Link>
 
                             {/* User Menu */}
                             <DropdownMenu>
@@ -468,6 +493,8 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                     <div className="mx-auto max-w-7xl">{children}</div>
                 </main>
             </div>
+
+            <CartSheet open={isCartOpen} onOpenChange={setIsCartOpen} />
         </div>
     );
 }

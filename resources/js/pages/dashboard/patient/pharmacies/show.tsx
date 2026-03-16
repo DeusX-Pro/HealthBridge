@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
 import PatientLayout from '@/layouts/patient-layout';
 import { 
     Store, 
@@ -14,8 +14,23 @@ import {
     Info, 
     AlertCircle,
     CheckCircle2,
-    ArrowLeft
+    ArrowLeft,
+    X,
+    CreditCard,
+    Package,
+    Plus
 } from 'lucide-react';
+import { useCart } from '@/contexts/cart-context';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog";
 
 interface Medicine {
     id: number;
@@ -60,6 +75,15 @@ export default function PharmacyShow() {
     const { pharmacy } = usePage<PageProps>().props;
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    
+    const { addToCart } = useCart();
+    
+    // Purchase Flow State
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+    const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
+    const [deliveryAddress, setDeliveryAddress] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [addedId, setAddedId] = useState<number | null>(null);
 
     const categories = ['All', ...Array.from(new Set(pharmacy.medicines.map(m => m.category?.name).filter(Boolean)))];
 
@@ -69,6 +93,49 @@ export default function PharmacyShow() {
         const matchesCategory = selectedCategory === 'All' || medicine.category?.name === selectedCategory;
         return matchesSearch && matchesCategory;
     });
+
+    const handleAddToCart = (medicine: Medicine) => {
+        addToCart({
+            id: medicine.id,
+            uuid: medicine.uuid,
+            name: medicine.name,
+            price: medicine.price,
+            pharmacy_id: pharmacy.id,
+            pharmacy_name: pharmacy.business_name
+        });
+        setAddedId(medicine.id);
+        setTimeout(() => setAddedId(null), 2000);
+    };
+
+    const handleCheckout = (medicine: Medicine) => {
+        setSelectedMedicine(medicine);
+        setIsCheckoutOpen(true);
+    };
+
+    const handleConfirmPurchase = () => {
+        if (!deliveryAddress) {
+            alert('Please enter a delivery address');
+            return;
+        }
+
+        setIsProcessing(true);
+        router.post('/patient/pharmacy/orders', {
+            pharmacy_id: pharmacy.id,
+            order_type: 'direct',
+            delivery_address: deliveryAddress,
+            items: [
+                {
+                    medicine_id: selectedMedicine?.id,
+                    quantity: 1
+                }
+            ]
+        }, {
+            onFinish: () => {
+                setIsProcessing(false);
+                setIsCheckoutOpen(false);
+            }
+        });
+    };
 
     return (
         <PatientLayout>
@@ -226,11 +293,25 @@ export default function PharmacyShow() {
 
                                         <button 
                                             disabled={medicine.stock === 0}
-                                            className="w-full py-3 rounded-2xl bg-slate-900 text-white font-bold text-sm hover:bg-primary transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/btn overflow-hidden relative"
+                                            onClick={() => handleAddToCart(medicine)}
+                                            className={`w-full py-3 rounded-2xl font-bold text-sm transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/btn overflow-hidden relative ${
+                                                addedId === medicine.id 
+                                                ? 'bg-green-600 text-white' 
+                                                : 'bg-slate-900 text-white hover:bg-primary'
+                                            }`}
                                         >
                                             <span className="relative z-10 flex items-center justify-center">
-                                                <ShoppingBag className="w-4 h-4 mr-2" />
-                                                Add to Cart
+                                                {addedId === medicine.id ? (
+                                                    <>
+                                                        <CheckCircle2 className="w-4 h-4 mr-2" />
+                                                        Added to Cart
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Plus className="w-4 h-4 mr-2" />
+                                                        Add to Cart
+                                                    </>
+                                                )}
                                             </span>
                                         </button>
                                     </div>
@@ -256,6 +337,73 @@ export default function PharmacyShow() {
                     </div>
                 )}
             </div>
+
+            {/* Checkout Modal */}
+            <Dialog open={isCheckoutOpen} onOpenChange={setIsCheckoutOpen}>
+                <DialogContent className="sm:max-w-[425px] rounded-3xl p-0 overflow-hidden border-none">
+                    <DialogHeader className="p-6 pb-0">
+                        <DialogTitle className="text-2xl font-black text-slate-900">Confirm Purchase</DialogTitle>
+                        <DialogDescription className="text-slate-500 font-medium pt-1">
+                            Complete your order for this medicine.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {selectedMedicine && (
+                        <div className="p-6 space-y-6">
+                            <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-4 border border-slate-100">
+                                <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center">
+                                    <Package className="w-6 h-6 text-primary" />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 leading-tight">{selectedMedicine.name}</h4>
+                                    <p className="text-xs font-medium text-slate-500">{selectedMedicine.dosage_form} • {selectedMedicine.brand?.name || 'Generic'}</p>
+                                </div>
+                                <div className="ml-auto text-right">
+                                    <p className="text-xs font-bold text-slate-400 uppercase">Total</p>
+                                    <p className="font-black text-slate-900">₦{Number(selectedMedicine.price).toLocaleString()}</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Delivery Address</label>
+                                    <textarea 
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none h-24 text-sm font-medium"
+                                        placeholder="Enter your clinical or home address for delivery..."
+                                        value={deliveryAddress}
+                                        onChange={(e) => setDeliveryAddress(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="bg-amber-50 rounded-2xl p-4 flex gap-3 border border-amber-100">
+                                    <Info className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                                    <p className="text-xs text-amber-700 font-medium leading-relaxed">
+                                        Payment will be deducted from your HealthBridge wallet balance upon delivery or confirmation.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-3">
+                                <Button 
+                                    className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg shadow-xl shadow-primary/20 transition-all active:scale-[0.98]"
+                                    onClick={handleConfirmPurchase}
+                                    disabled={isProcessing}
+                                >
+                                    {isProcessing ? 'Processing Order...' : 'Confirm Order'}
+                                    {!isProcessing && <ChevronRight className="ml-2 w-5 h-5" />}
+                                </Button>
+                                <Button 
+                                    variant="ghost" 
+                                    className="w-full h-12 rounded-xl text-slate-500 font-bold hover:bg-slate-50"
+                                    onClick={() => setIsCheckoutOpen(false)}
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </PatientLayout>
     );
 }

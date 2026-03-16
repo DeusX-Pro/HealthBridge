@@ -61,9 +61,15 @@ class OrderController extends Controller
 
         $validated = $request->validate([
             'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+            'rejection_reason' => 'nullable|string',
+            'pharmacy_note' => 'nullable|string',
         ]);
 
-        $order->update(['status' => $validated['status']]);
+        $order->update([
+            'status' => $validated['status'],
+            'rejection_reason' => $validated['rejection_reason'] ?? $order->rejection_reason,
+            'pharmacy_note' => $validated['pharmacy_note'] ?? $order->pharmacy_note,
+        ]);
 
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }
