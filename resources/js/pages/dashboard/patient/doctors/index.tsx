@@ -224,7 +224,7 @@ export default function Doctors() {
 
                     {/* Sidebar - Specialties */}
                     <div
-                        className={`fixed inset-y-0 left-0 z-50 w-80 transform overflow-y-auto border-r border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:relative lg:col-span-3 lg:sticky lg:top-20 lg:z-auto lg:w-auto lg:translate-x-0 lg:self-start lg:shadow-none ${
+                        className={`fixed inset-y-0 left-0 z-50 w-80 transform overflow-y-auto border-r border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:col-span-3 lg:sticky lg:top-20 lg:z-auto lg:w-auto lg:translate-x-0 lg:self-start lg:shadow-none ${
                             isFilterOpen ? 'translate-x-0' : '-translate-x-full'
                         }`}
                     >
