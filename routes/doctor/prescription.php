@@ -6,5 +6,6 @@ use Inertia\Inertia;
 use App\Http\Middleware\DoctorMiddleware;
 
 Route::middleware(['auth', 'verified', DoctorMiddleware::class])->group(function () {
-    Route::get('doctor/prescriptions', [PrescriptionController::class, 'index'])->name('doctor.prescriptions');
-}); 
+    Route::get('doctor/prescription', [PrescriptionController::class, 'index'])->name('doctor.prescription');
+    Route::post('doctor/prescription', [PrescriptionController::class, 'store'])->name('doctor.prescription.store');
+});

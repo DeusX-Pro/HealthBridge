@@ -25,7 +25,10 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
             'email' => fake()->unique()->safeEmail(),
+            'phone_number' => fake()->unique()->phoneNumber(),
+            'role' => 'patient',
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

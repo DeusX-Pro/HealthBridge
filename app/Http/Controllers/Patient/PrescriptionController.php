@@ -14,7 +14,7 @@ class PrescriptionController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $user->load('patient');
+        $user->load(['patient.prescriptions.doctor.user', 'patient.prescriptions.items.medicine']);
         return inertia(
             'dashboard/patient/prescriptions/index',
             [

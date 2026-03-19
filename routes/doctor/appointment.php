@@ -7,4 +7,5 @@ use App\Http\Middleware\DoctorMiddleware;
 
 Route::middleware(['auth', 'verified', DoctorMiddleware::class])->group(function () {
     Route::get('doctor/appointments', [AppointmentController::class, 'index'])->name('doctor.appointments');
-}); 
+    Route::put('doctor/appointments/{appointment}', [AppointmentController::class, 'update'])->name('doctor.appointments.update');
+});

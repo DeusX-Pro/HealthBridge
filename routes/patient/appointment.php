@@ -8,4 +8,5 @@ use App\Http\Middleware\PatientMiddleware;
 
 Route::middleware(['auth', 'verified', PatientMiddleware::class])->group(function () {
     Route::get('patient/appointments', [AppointmentController::class, 'index'])->name('patient.appointments');
+    Route::post('patient/appointments', [AppointmentController::class, 'store'])->name('patient.appointments.store');
 });
