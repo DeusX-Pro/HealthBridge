@@ -51,6 +51,8 @@ class IndexController extends Controller
                 'pharmacyOrders' => $allPharmacyOrders,
                 'labOrders' => $allLabOrders,
                 'walletBalance' => $user->balance(),
+                'unreadMessages' => 0, // Placeholder
+                'labResultsCount' => $allLabOrders->count(),
             ]
         );
     }

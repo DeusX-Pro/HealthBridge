@@ -76,7 +76,9 @@ export default function Dashboard() {
         activePrescriptions, 
         pharmacyOrders,
         labOrders,
-        walletBalance 
+        walletBalance,
+        unreadMessages,
+        labResultsCount 
     } = usePage<PageProps>().props;
 
     const [activeTab, setActiveTab] = useState<'overview' | 'pharmacy' | 'labs'>('overview');
@@ -394,7 +396,7 @@ export default function Dashboard() {
                                             </span>
                                         </div>
                                         <span className="text-sm font-bold text-green-600">
-                                            2 left
+                                            0 left
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between rounded-lg bg-white p-3">
@@ -405,7 +407,7 @@ export default function Dashboard() {
                                             </span>
                                         </div>
                                         <span className="text-sm font-bold text-blue-600">
-                                            3 active
+                                            0 active
                                         </span>
                                     </div>
                                 </div>

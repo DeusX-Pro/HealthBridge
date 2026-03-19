@@ -60,95 +60,36 @@ interface PageProps {
 }
 
 export default function Dashboard() {
-    const { auth, upcomingAppointments = [], todayAppointmentsCount = 0, totalPatientsCount = 0, walletBalance = 0 } = usePage<PageProps>().props;
+    const { 
+        auth, 
+        upcomingAppointments = [], 
+        todayAppointmentsCount = 0, 
+        totalPatientsCount = 0, 
+        walletBalance = 0,
+        recentPatients = [],
+        activePrescriptionsCount = 0,
+        unreadMessages = 0
+    } = usePage<PageProps>().props;
 
-    // Mock data - only for items not yet dynamic
+    // Stats based on real data
     const stats = {
-        activePrescriptions: 23,
-        unreadMessages: 12,
-        labResultsPending: 7,
+        activePrescriptions: activePrescriptionsCount,
+        unreadMessages: unreadMessages,
+        labResultsPending: 0,
         availabilityStatus: 'Available',
-        recentRecords: 15,
-        telemedicineSessions: 4,
-        monthlyEarnings: 45600,
-        earningsGrowth: 12.5,
-        patientGrowth: 8.3,
-        appointmentRate: 94.2,
-        todayRevenue: 2340,
-        averageRating: 4.8,
-        totalReviews: 156,
+        recentRecords: 0,
+        telemedicineSessions: 0,
+        monthlyEarnings: 0,
+        earningsGrowth: 0,
+        patientGrowth: 0,
+        appointmentRate: 100,
+        todayRevenue: 0,
+        averageRating: 0,
+        totalReviews: 0,
     };
 
-    const recentPatients = [
-        {
-            id: 1,
-            name: 'John Anderson',
-            lastVisit: '2 days ago',
-            condition: 'Hypertension',
-            status: 'stable',
-            avatar: 'JA',
-        },
-        {
-            id: 2,
-            name: 'Lisa Martinez',
-            lastVisit: '1 week ago',
-            condition: 'Diabetes Type 2',
-            status: 'monitoring',
-            avatar: 'LM',
-        },
-        {
-            id: 3,
-            name: 'Robert Taylor',
-            lastVisit: '3 days ago',
-            condition: 'Asthma',
-            status: 'stable',
-            avatar: 'RT',
-        },
-    ];
-
-    const pendingLabResults = [
-        {
-            id: 1,
-            patientName: 'Sarah Williams',
-            testType: 'Complete Blood Count',
-            orderedDate: 'Dec 10, 2024',
-            priority: 'routine',
-        },
-        {
-            id: 2,
-            patientName: 'Michael Chen',
-            testType: 'Lipid Panel',
-            orderedDate: 'Dec 11, 2024',
-            priority: 'urgent',
-        },
-    ];
-
-    const recentMessages = [
-        {
-            id: 1,
-            from: 'Sarah Williams',
-            message: 'Thank you for the consultation, feeling much better!',
-            time: '10 min ago',
-            unread: true,
-            avatar: 'SW',
-        },
-        {
-            id: 2,
-            from: 'Michael Chen',
-            message: 'Can I reschedule my appointment to next week?',
-            time: '1 hour ago',
-            unread: true,
-            avatar: 'MC',
-        },
-        {
-            id: 3,
-            from: 'Admin Team',
-            message: 'New patient referral has been assigned to you',
-            time: '3 hours ago',
-            unread: false,
-            avatar: 'AT',
-        },
-    ];
+    const pendingLabResults: any[] = [];
+    const recentMessages: any[] = [];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -438,7 +379,7 @@ export default function Dashboard() {
                         </div>
 
                         <div className="space-y-3">
-                            {recentPatients.map((patient) => (
+                            {recentPatients.map((patient: any) => (
                                 <div key={patient.id} className="cursor-pointer rounded-xl border border-gray-100 bg-gray-50 p-4 transition-all hover:shadow-md">
                                     <div className="flex items-center gap-3">
                                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-600 to-emerald-600 text-white font-bold text-sm">
@@ -459,6 +400,10 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             ))}
+
+                            {recentPatients.length === 0 && (
+                                <p className="text-center py-8 text-gray-500 italic text-sm">No recent patients found.</p>
+                            )}
 
                             <Link href="/doctor/patients">
                                 <Button variant="outline" className="w-full text-green-600 hover:bg-green-50">
@@ -633,7 +578,7 @@ export default function Dashboard() {
                                             Telemedicine
                                         </p>
                                         <p className="text-xs text-gray-600">
-                                            {stats.telemedicineSessions} active sessions
+                                            0 active sessions
                                         </p>
                                     </div>
                                     <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-green-600" />
@@ -650,7 +595,7 @@ export default function Dashboard() {
                                             Medical Records
                                         </p>
                                         <p className="text-xs text-gray-600">
-                                            {stats.recentRecords} recent updates
+                                            0 recent updates
                                         </p>
                                     </div>
                                     <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600" />
