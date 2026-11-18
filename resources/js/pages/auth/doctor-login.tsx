@@ -1,4 +1,3 @@
-import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { register } from '@/routes';
+import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
 import {
@@ -66,7 +66,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     {/* Login Card */}
                     <div className="rounded-3xl border border-green-200 bg-white p-8 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
                         <Form
-                            {...AuthenticatedSessionController.store.form()}
+                            {...store.form()}
                             resetOnSuccess={['password']}
                             className="flex flex-col gap-6"
                         >
