@@ -13,31 +13,21 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('uuid')->unique();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone_number')->unique();
-            $table->date('date_of_birth')->nullable();
+            $table->uuid('uuid')->unique();
+            $table->string('public_reference', 64)->unique();
+            $table->string('first_name', 128);
+            $table->string('last_name', 128);
+            $table->string('email', 255)->unique();
+            $table->string('phone_e164', 32)->unique();
+            $table->date('date_of_birth');
+            $table->enum('biological_sex', ['FEMALE', 'MALE']);
+            $table->string('password', 255);
+            $table->string('encryption_salt', 128)->nullable();
+            $table->boolean('is_mfa_active')->default(false);
+            $table->enum('status', ['ACTIVE', 'SUSPENDED', 'PENDING_REVIEW'])->default('ACTIVE');
             $table->timestamp('email_verified_at')->nullable();
-            $table->timestamp('phone_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('role', ['admin', 'patient', 'doctor', 'pharmacy', 'medical_lab'])->default('patient');
-            $table->string('profile_picture')->nullable();
-            $table->string('country')->nullable();
-            $table->enum('status', ['active', 'pending', 'inactive'])->default('active');
-            $table->enum('gender', ['male', 'female', 'other'])->nullable();
-            $table->string('bio')->nullable();
-            $table->enum('maritial_status', ['single', 'married', 'divorced', 'widowed', 'seperated'])->nullable();
             $table->rememberToken();
             $table->timestamps();
-
-            //BLOCKCHAIN & DATA SECURITY
-            // $table->string('blockchain_wallet_address')->nullable();
-            // $table->string('encrypted_medical_data_hash')->nullable();
-            // $table->string('public_encryption_key')->nullable();
-            // $table->boolean('consent_to_share_data')->default(false);
-            // $table->string('last_sync_hash')->nullable();
-
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

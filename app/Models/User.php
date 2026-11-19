@@ -2,103 +2,203 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-// use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $guarded = ['id'];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
+        'encryption_salt',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
+            'date_of_birth' => 'date',
+            'is_mfa_active' => 'boolean',
             'password' => 'hashed',
         ];
     }
 
-    public function patient()
+    protected static function booted(): void
     {
-        return $this->hasOne(Patient::class);
+        static::creating(function ($user) {
+            if (empty($user->uuid)) {
+                $user->uuid = (string) Str::uuid();
+            }
+            if (empty($user->public_reference)) {
+                $user->public_reference = 'pat_' . Str::lower(Str::random(12));
+            }
+        });
     }
 
-    public function appointments()
+    public function getNameAttribute(): string
     {
-        return $this->hasMany(Appointment::class);
+        return trim("{$this->first_name} {$this->last_name}");
     }
 
-    public function vitals()
+    public function isFemale(): bool
     {
-        return $this->hasMany(Vital::class);
+        return $this->biological_sex === 'FEMALE';
     }
 
-    public function prescriptions()
+    public function isMale(): bool
     {
-        return $this->hasMany(Prescription::class);
+        return $this->biological_sex === 'MALE';
     }
 
-    public function walletTransactions()
+    // Relationships
+    public function mfaFactors()
     {
-        return $this->hasMany(WalletTransaction::class);
+        return $this->hasMany(MfaFactor::class);
     }
 
-    public function doctor()
+    public function interests()
     {
-        return $this->hasOne(Doctor::class);
+        return $this->hasMany(PatientInterest::class);
     }
 
-    public function pharmacy()
+    public function legalConsents()
     {
-        return $this->hasOne(Pharmacy::class);
+        return $this->hasMany(PatientLegalConsent::class);
     }
 
-    public function medicallab()
+    public function connectedHospitals()
     {
-        return $this->hasOne(Medicallab::class);
+        return $this->hasMany(ConnectedHospital::class);
     }
 
-    public function balance()
+    public function clinicalRecords()
     {
-        $credits = $this->walletTransactions()
-            ->where('type', 'credit')
-            ->where('status', 'completed')
-            ->sum('amount');
-
-        $debits = $this->walletTransactions()
-            ->where('type', 'debit')
-            ->where('status', 'completed')
-            ->sum('amount');
-
-        return (float) ($credits - $debits);
+        return $this->hasMany(ClinicalRecord::class);
     }
 
-    
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function diaryEntries()
+    {
+        return $this->hasMany(DiaryEntry::class);
+    }
+
+    public function measurements()
+    {
+        return $this->hasMany(Measurement::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    public function medications()
+    {
+        return $this->hasMany(Medication::class);
+    }
+
+    public function cycleRecords()
+    {
+        return $this->hasMany(CycleRecord::class);
+    }
+
+    public function dailySymptomLogs()
+    {
+        return $this->hasMany(DailySymptomLog::class);
+    }
+
+    public function cyclePredictions()
+    {
+        return $this->hasMany(CyclePrediction::class);
+    }
+
+    public function contraceptionPlan()
+    {
+        return $this->hasOne(ContraceptionPlan::class);
+    }
+
+    public function selfExamLogs()
+    {
+        return $this->hasMany(SelfExamLog::class);
+    }
+
+    public function screeningSettings()
+    {
+        return $this->hasOne(PatientScreeningSetting::class);
+    }
+
+    public function nutritionProfile()
+    {
+        return $this->hasOne(NutritionProfile::class);
+    }
+
+    public function nutritionPlans()
+    {
+        return $this->hasMany(NutritionPlan::class);
+    }
+
+    public function foodLogs()
+    {
+        return $this->hasMany(FoodLog::class);
+    }
+
+    public function waterLogs()
+    {
+        return $this->hasMany(WaterLog::class);
+    }
+
+    public function addLinks()
+    {
+        return $this->hasMany(AddLink::class);
+    }
+
+    public function viewLinks()
+    {
+        return $this->hasMany(ViewLink::class);
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(SharingSubmission::class);
+    }
+
+    public function checklists()
+    {
+        return $this->hasMany(Checklist::class);
+    }
+
+    public function safetyPlan()
+    {
+        return $this->hasOne(SafetyPlan::class);
+    }
+
+    public function communityProfile()
+    {
+        return $this->hasOne(CommunityProfile::class);
+    }
+
+    public function notificationPreference()
+    {
+        return $this->hasOne(NotificationPreference::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(ArticleBookmark::class);
+    }
 }
